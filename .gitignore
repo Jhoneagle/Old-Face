@@ -1,0 +1,9 @@
+/target
+.idea
+*.iml
+/out
+*.db
+nbactions-release-profile.xml
+nbactions.xml
+dependency-reduced-pom.xml
+.tmcproject.yml

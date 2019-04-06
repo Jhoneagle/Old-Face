@@ -1,4 +1,4 @@
-package projekti.Models;
+package projekti.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,21 +7,20 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Reaction extends AbstractPersistable<Long> {
-    private String content;
+public class Friend extends AbstractPersistable<Long> {
+    //private String usernameOfWhoAsks;
     private Long status;
+    private LocalDate timestamp;
 
     @ManyToOne
-    private Account who;
+    private Account usernameOfWhoAsks;
 
     @ManyToOne
-    private Image image;
-
-    @ManyToOne
-    private StatusUpdate statusUpdate;
+    private Account askedFrom;
 }

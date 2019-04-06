@@ -1,4 +1,4 @@
-package projekti.Configurations;
+package projekti.configurations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,10 +13,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Profile("default")
+@Profile("production")
 @Configuration
 @EnableWebSecurity
-public class DevelopmentSecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class ProductionSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Qualifier("customUserDetailsService")
     @Autowired
@@ -24,11 +24,7 @@ public class DevelopmentSecurityConfiguration extends WebSecurityConfigurerAdapt
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.headers().frameOptions().sameOrigin();
-
         http.authorizeRequests()
-                .antMatchers("/h2-console", "/h2-console/**").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated();
 

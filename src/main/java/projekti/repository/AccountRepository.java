@@ -1,7 +1,7 @@
-package projekti.Repository;
+package projekti.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import projekti.Models.Account;
+import projekti.models.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Account findByUsername(String username);

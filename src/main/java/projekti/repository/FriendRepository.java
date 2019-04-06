@@ -1,7 +1,7 @@
-package projekti.Repository;
+package projekti.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import projekti.Models.Friend;
+import projekti.models.Friend;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 

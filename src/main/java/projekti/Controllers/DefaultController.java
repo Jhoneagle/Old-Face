@@ -1,4 +1,4 @@
-package projekti;
+package projekti.Controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

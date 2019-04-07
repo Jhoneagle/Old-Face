@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +30,11 @@ public class Account extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "to")
     private List<StatusUpdate> wall = new ArrayList<>();
 
-    @OneToMany(mappedBy = "askedFrom")
+    @OneToMany(mappedBy  = "whoAsks")
     private List<Friend> friends = new ArrayList<>();
+
+    @OneToMany(mappedBy  = "askedFrom")
+    private List<Friend> friendsOf = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
     private List<Image> images = new ArrayList<>();

@@ -94,6 +94,6 @@ public class FriendRepositoryTest {
 
         Account isItReal = this.accountRepository.getOne(first.getAskedFrom().getId());
         assertEquals(resiver.getId(), isItReal.getId());
-        assertEquals(1, isItReal.getFriends().size());
+        assertEquals(1, isItReal.getFriendsOf().size());
     }
 }

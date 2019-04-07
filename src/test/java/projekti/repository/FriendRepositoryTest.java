@@ -76,15 +76,24 @@ public class FriendRepositoryTest {
         Account resiver = TestUtilities.createAccount("owner", "owner");
         this.accountRepository.save(sender);
         this.accountRepository.save(resiver);
-        List<Account> users = this.accountRepository.findAll();
 
-        first.setWhoAsks(users.get(0));
-        first.setAskedFrom(users.get(1));
+        List<Account> users = this.accountRepository.findAll();
+        sender = users.get(0);
+        resiver = users.get(1);
+
+        first.setWhoAsks(sender);
+        first.setAskedFrom(resiver);
 
         this.friendRepository.save(first);
         first = this.friendRepository.findAll().get(0);
 
         assertNotNull(first);
+        assertNotNull(first.getAskedFrom());
+        assertEquals(sender.getUsername(), first.getWhoAsks().getUsername());
+        assertEquals(sender.getId(), first.getWhoAsks().getId());
 
+        Account isItReal = this.accountRepository.getOne(first.getAskedFrom().getId());
+        assertEquals(resiver.getId(), isItReal.getId());
+        assertEquals(1, isItReal.getFriends().size());
     }
 }

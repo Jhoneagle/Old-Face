@@ -1,10 +1,147 @@
 package projekti.repository;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.runner.RunWith;
+import javax.transaction.Transactional;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import projekti.models.Account;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class AccountRepositoryTest {
-    @Test
-    public void addSimpleAccount() {
+    @Autowired
+    private AccountRepository accountRepository;
 
+    @Before
+    public void before() {
+        this.accountRepository.deleteAll();
+    }
+
+    @Test
+    @Transactional
+    public void addSimpleAccount() {
+        Account account = createAccount("John", "Eagle");
+
+        this.accountRepository.save(account);
+        account = this.accountRepository.findByUsername("John");
+
+        assertNotNull(account);
+        assertEquals("John", account.getUsername());
+        assertEquals("Eagle", account.getPassword());
+    }
+
+    @Test
+    @Transactional
+    public void addMultipleSimpleAccounts() {
+        Account account = createAccount("admin", "12345");
+        Account another = createAccount("Unknown", "Clasified");
+
+        this.accountRepository.save(account);
+        this.accountRepository.save(another);
+
+        account = this.accountRepository.findByUsername("admin");
+        another = this.accountRepository.findByUsername("Unknown");
+
+        assertNotNull(account);
+        assertNotNull(another);
+        assertEquals("admin", account.getUsername());
+        assertEquals("Clasified", another.getPassword());
+    }
+
+    @Test
+    @Transactional
+    public void authoritiesCanBeAdded() {
+        Account account = createAccount("user", "notAdmin");
+        account.getAuthorities().add("USER");
+
+        this.accountRepository.save(account);
+        account = this.accountRepository.findByUsername("user");
+
+        assertNotNull(account);
+        assertEquals(1, account.getAuthorities().size());
+        assertEquals("USER", account.getAuthorities().get(0));
+    }
+
+    @Test
+    @Transactional
+    public void multipleAuthoritiesCanBeAdded() {
+        Account account = createAccount("user", "notAdmin");
+        List<String> auth = account.getAuthorities();
+
+        auth.add("USER");
+        auth.add("TESTER");
+        auth.add("ADMIN");
+        auth.add("POSTER");
+
+        account.setAuthorities(auth);
+        this.accountRepository.save(account);
+        account = this.accountRepository.findByUsername("user");
+
+        assertNotNull(account);
+        assertEquals(4, account.getAuthorities().size());
+        assertTrue(account.getAuthorities().contains("USER"));
+        assertTrue(account.getAuthorities().contains("TESTER"));
+        assertTrue(account.getAuthorities().contains("POSTER"));
+        assertTrue(account.getAuthorities().contains("ADMIN"));
+    }
+
+    @Test
+    @Transactional
+    public void allFieldsNotRelating() {
+        Account account = createAccount("xd", "xd");
+        account.setAddress("Gustaf Hällströmin katu 2B");
+        account.setAddressNumber("00560");
+        account.setCity("Helsinki");
+        account.setBorn(LocalDate.of(1998, 5, 28));
+        account.setEmail("askepore@gmail.com");
+        account.setFirstName("Admin");
+        account.setLastName("Badass");
+        account.setPhoneNumber("0501234678");
+        account.setNickname("Makke");
+
+        this.accountRepository.save(account);
+        account = this.accountRepository.findByUsername("xd");
+
+        assertNotNull(account);
+        assertEquals("Helsinki", account.getCity());
+        assertEquals("Admin", account.getFirstName());
+        assertEquals("Gustaf Hällströmin katu 2B", account.getAddress());
+        assertEquals("0501234678", account.getPhoneNumber());
+        assertTrue(account.getBorn().compareTo(LocalDate.of(1998, 5, 28)) == 0);
+    }
+
+    @Test
+    @Transactional
+    public void everythingComesInFindAll() {
+        this.accountRepository.save(createAccount("user", "notAdmin"));
+        this.accountRepository.save(createAccount("xd", "xd"));
+        this.accountRepository.save(createAccount("Unknown", "Clasified"));
+        this.accountRepository.save(createAccount("John", "Eagle"));
+        this.accountRepository.save(createAccount("admin", "12345"));
+
+        List<Account> people = this.accountRepository.findAll();
+
+        assertEquals(5, people.size());
+        assertEquals("Unknown", people.get(2).getUsername());
+        assertEquals("notAdmin", people.get(0).getPassword());
+        assertEquals("John", people.get(3).getUsername());
+        assertEquals("12345", people.get(4).getPassword());
+    }
+
+    private Account createAccount(String username, String password) {
+        Account account = new Account();
+        account.setUsername(username);
+        account.setPassword(password);
+        return account;
     }
 }

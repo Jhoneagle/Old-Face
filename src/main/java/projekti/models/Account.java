@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,17 +31,17 @@ public class Account extends AbstractPersistable<Long> {
     private LocalDate born;
 
     @OneToMany(mappedBy = "to")
-    private List<StatusUpdate> wall;
+    private List<StatusUpdate> wall = new ArrayList<>();
 
     @OneToMany(mappedBy = "askedFrom")
-    private List<Friend> friends;
+    private List<Friend> friends = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
-    private List<Image> images;
+    private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "who")
-    private List<Reaction> reactions;
+    private List<Reaction> reactions = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> authorities;
+    private List<String> authorities = new ArrayList<>();
 }

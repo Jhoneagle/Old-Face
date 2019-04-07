@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,5 +33,5 @@ public class Image extends AbstractPersistable<Long> {
     private StatusUpdate update;
 
     @OneToMany(mappedBy = "image")
-    private List<Reaction> reactions;
+    private List<Reaction> reactions = new ArrayList<>();
 }

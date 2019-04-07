@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,11 +26,11 @@ public class StatusUpdate extends AbstractPersistable<Long> {
     private Image image;
 
     @ManyToOne
-    private Account creatorsUsername;
+    private Account creator;
 
     @ManyToOne
     private Account to;
 
     @OneToMany(mappedBy = "statusUpdate")
-    private List<Reaction> reactions;
+    private List<Reaction> reactions = new ArrayList<>();
 }

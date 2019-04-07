@@ -19,7 +19,7 @@ public class Friend extends AbstractPersistable<Long> {
     private LocalDate timestamp;
 
     @ManyToOne
-    private Account usernameOfWhoAsks;
+    private Account WhoAsks;
 
     @ManyToOne
     private Account askedFrom;

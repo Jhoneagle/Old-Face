@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import projekti.TestUtilities;
 import projekti.models.Account;
 
 import java.time.LocalDate;
@@ -30,7 +31,7 @@ public class AccountRepositoryTest {
     @Test
     @Transactional
     public void addSimpleAccount() {
-        Account account = createAccount("John", "Eagle");
+        Account account = TestUtilities.createAccount("John", "Eagle");
 
         this.accountRepository.save(account);
         account = this.accountRepository.findByUsername("John");
@@ -43,8 +44,8 @@ public class AccountRepositoryTest {
     @Test
     @Transactional
     public void addMultipleSimpleAccounts() {
-        Account account = createAccount("admin", "12345");
-        Account another = createAccount("Unknown", "Clasified");
+        Account account = TestUtilities.createAccount("admin", "12345");
+        Account another = TestUtilities.createAccount("Unknown", "Clasified");
 
         this.accountRepository.save(account);
         this.accountRepository.save(another);
@@ -61,7 +62,7 @@ public class AccountRepositoryTest {
     @Test
     @Transactional
     public void authoritiesCanBeAdded() {
-        Account account = createAccount("user", "notAdmin");
+        Account account = TestUtilities.createAccount("user", "notAdmin");
         account.getAuthorities().add("USER");
 
         this.accountRepository.save(account);
@@ -75,7 +76,7 @@ public class AccountRepositoryTest {
     @Test
     @Transactional
     public void multipleAuthoritiesCanBeAdded() {
-        Account account = createAccount("user", "notAdmin");
+        Account account = TestUtilities.createAccount("user", "notAdmin");
         List<String> auth = account.getAuthorities();
 
         auth.add("USER");
@@ -98,7 +99,7 @@ public class AccountRepositoryTest {
     @Test
     @Transactional
     public void allFieldsNotRelating() {
-        Account account = createAccount("xd", "xd");
+        Account account = TestUtilities.createAccount("xd", "xd");
         account.setAddress("Gustaf Hällströmin katu 2B");
         account.setAddressNumber("00560");
         account.setCity("Helsinki");
@@ -123,11 +124,11 @@ public class AccountRepositoryTest {
     @Test
     @Transactional
     public void everythingComesInFindAll() {
-        this.accountRepository.save(createAccount("user", "notAdmin"));
-        this.accountRepository.save(createAccount("xd", "xd"));
-        this.accountRepository.save(createAccount("Unknown", "Clasified"));
-        this.accountRepository.save(createAccount("John", "Eagle"));
-        this.accountRepository.save(createAccount("admin", "12345"));
+        this.accountRepository.save(TestUtilities.createAccount("user", "notAdmin"));
+        this.accountRepository.save(TestUtilities.createAccount("xd", "xd"));
+        this.accountRepository.save(TestUtilities.createAccount("Unknown", "Clasified"));
+        this.accountRepository.save(TestUtilities.createAccount("John", "Eagle"));
+        this.accountRepository.save(TestUtilities.createAccount("admin", "12345"));
 
         List<Account> people = this.accountRepository.findAll();
 
@@ -136,12 +137,5 @@ public class AccountRepositoryTest {
         assertEquals("notAdmin", people.get(0).getPassword());
         assertEquals("John", people.get(3).getUsername());
         assertEquals("12345", people.get(4).getPassword());
-    }
-
-    private Account createAccount(String username, String password) {
-        Account account = new Account();
-        account.setUsername(username);
-        account.setPassword(password);
-        return account;
     }
 }

@@ -32,10 +32,10 @@ public class Account extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "to")
     private List<StatusUpdate> wall = new ArrayList<>();
 
-    @OneToMany(mappedBy  = "receiver")
+    @OneToMany(mappedBy = "receiver")
     private List<Friend> receiverFriends = new ArrayList<>();
 
-    @OneToMany(mappedBy  = "sender")
+    @OneToMany(mappedBy = "sender")
     private List<Friend> sentFriends = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")

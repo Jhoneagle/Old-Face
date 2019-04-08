@@ -8,6 +8,26 @@
 
         <h1 th:text="${'Hello ' + message}">Hello world</h1>
 
+        <ul>
+            <li th:each="person: ${persons}">
+                <span th:text="${person.username}">username</span>
+                
+                <ul>
+                    <li th:each="friend: ${person.receiverFriends}">
+                        <span th:text="${friend.status}">listan koko</span>
+                    </li>
+                </ul>
 
+                <ul>
+                    <li th:each="friend: ${person.sentFriends}">
+                        <span th:text="${friend.status}">listan koko</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        
+        <form th:action="@{/}" method="POST">
+            <input type="submit" value="Lisää!"/>
+        </form>
     </body>
 </html>

@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.runner.RunWith;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -66,6 +66,7 @@ public class FriendRepositoryTest {
         assertEquals(third.getStatus(), friends.get(2).getStatus());
     }
 
+    // This test doesnt fucking work!!!! omg!!!
     @Test
     @Transactional
     public void addSimpleRelatedFriend() {
@@ -85,12 +86,7 @@ public class FriendRepositoryTest {
 
         first.setSender(sender);
         first.setReceiver(receiver);
-/*
-        sender.getSentFriends().add(first);
-        receiver.getReceiverFriends().add(first);
-        this.accountRepository.save(sender);
-        this.accountRepository.save(receiver);
-        */
+
         this.friendRepository.save(first);
         first = this.friendRepository.findAll().get(0);
 
@@ -104,5 +100,9 @@ public class FriendRepositoryTest {
         assertEquals(receiver.getPassword(), isItReal.getPassword());
         assertEquals(receiver.getId(), isItReal.getId());
         assertEquals(1, isItReal.getReceiverFriends().size());
+        
+        isItReal = this.accountRepository.getOne(sender.getId());
+        assertNotNull(isItReal);
+        assertEquals(1, isItReal.getSentFriends().size());
     }
 }

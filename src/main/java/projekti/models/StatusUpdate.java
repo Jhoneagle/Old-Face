@@ -20,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StatusUpdate extends AbstractPersistable<Long> {
-    //private String creatorsUsername;
     private String content;
     private LocalDate timestamp;
 

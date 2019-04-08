@@ -65,44 +65,4 @@ public class FriendRepositoryTest {
         assertEquals(first.getStatus(), friends.get(0).getStatus());
         assertEquals(third.getStatus(), friends.get(2).getStatus());
     }
-
-    // This test doesnt fucking work!!!! omg!!!
-    /*@Test
-    @Transactional
-    public void addSimpleRelatedFriend() {
-        LocalDate time = LocalDate.now();
-        Friend first = TestUtilities.createFriend(0, time);
-        this.friendRepository.save(first);
-        first = this.friendRepository.findByTimestamp(time);
-
-        Account sender = TestUtilities.createAccount("admin", "admin");
-        Account receiver = TestUtilities.createAccount("owner", "owner");
-        this.accountRepository.save(sender);
-        this.accountRepository.save(receiver);
-
-        List<Account> users = this.accountRepository.findAll();
-        sender = users.get(0);
-        receiver = users.get(1);
-
-        first.setSender(sender);
-        first.setReceiver(receiver);
-
-        this.friendRepository.save(first);
-        first = this.friendRepository.findAll().get(0);
-
-        assertNotNull(first);
-        assertNotNull(first.getReceiver());
-        assertEquals(sender.getUsername(), first.getSender().getUsername());
-        assertEquals(sender.getId(), first.getSender().getId());
-
-        Account isItReal = this.accountRepository.getOne(first.getReceiver().getId());
-        assertNotNull(isItReal);
-        assertEquals(receiver.getPassword(), isItReal.getPassword());
-        assertEquals(receiver.getId(), isItReal.getId());
-        assertEquals(1, isItReal.getReceiverFriends().size());
-        
-        isItReal = this.accountRepository.getOne(sender.getId());
-        assertNotNull(isItReal);
-        assertEquals(1, isItReal.getSentFriends().size());
-    }*/
 }

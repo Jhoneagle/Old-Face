@@ -23,6 +23,18 @@
                         <span th:text="${friend.status}">listan koko</span>
                     </li>
                 </ul>
+
+                <ul>
+                    <li th:each="statusupdate: ${person.posts}">
+                        <span th:text="${statusupdate.content}">listan koko</span>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li th:each="statusupdate: ${person.wall}">
+                        <span th:text="${statusupdate.content}">listan koko</span>
+                    </li>
+                </ul>
             </li>
         </ul>
         

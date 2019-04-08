@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import projekti.models.Account;
 import projekti.models.Friend;
+import projekti.models.StatusUpdate;
 import projekti.repository.AccountRepository;
 import projekti.repository.FriendRepository;
+import projekti.repository.StatusUpdateRepository;
 
 @Controller
 public class DefaultController {
@@ -20,7 +22,10 @@ public class DefaultController {
 
     @Autowired
     private AccountRepository accountRepository;
-    
+
+    @Autowired
+    private StatusUpdateRepository statusUpdateRepository;
+
     private LocalDate time;
     
     @PostConstruct
@@ -33,6 +38,9 @@ public class DefaultController {
         Account receiver = createAccount("owner", "owner");
         this.accountRepository.save(sender);
         this.accountRepository.save(receiver);
+
+        StatusUpdate status = createStatusUpdate("test status", time);
+        this.statusUpdateRepository.save(status);
     }
     
     @GetMapping("*")
@@ -44,16 +52,26 @@ public class DefaultController {
     
     @PostMapping("/")
     public String associnate() {
-        Friend first = this.friendRepository.findByTimestamp(time);
-
+        // Get Accounts
         List<Account> users = this.accountRepository.findAll();
         Account sender = users.get(0);
         Account receiver = users.get(1);
+
+        // Account - Friend join
+        Friend first = this.friendRepository.findByTimestamp(time);
 
         first.setSender(sender);
         first.setReceiver(receiver);
 
         this.friendRepository.save(first);
+
+        // Account - StatusUpdate join
+        StatusUpdate status = this.statusUpdateRepository.findByTimestamp(time);
+
+        status.setCreator(sender);
+        status.setTo(receiver);
+
+        this.statusUpdateRepository.save(status);
         return "redirect:/";
     }
     
@@ -69,5 +87,12 @@ public class DefaultController {
         account.setUsername(username);
         account.setPassword(password);
         return account;
+    }
+
+    private StatusUpdate createStatusUpdate(String content, LocalDate time) {
+        StatusUpdate status = new StatusUpdate();
+        status.setContent(content);
+        status.setTimestamp(time);
+        return status;
     }
 }

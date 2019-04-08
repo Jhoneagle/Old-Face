@@ -71,29 +71,38 @@ public class FriendRepositoryTest {
     public void addSimpleRelatedFriend() {
         LocalDate time = LocalDate.now();
         Friend first = TestUtilities.createFriend(0, time);
+        this.friendRepository.save(first);
+        first = this.friendRepository.findByTimestamp(time);
 
         Account sender = TestUtilities.createAccount("admin", "admin");
-        Account resiver = TestUtilities.createAccount("owner", "owner");
+        Account receiver = TestUtilities.createAccount("owner", "owner");
         this.accountRepository.save(sender);
-        this.accountRepository.save(resiver);
+        this.accountRepository.save(receiver);
 
         List<Account> users = this.accountRepository.findAll();
         sender = users.get(0);
-        resiver = users.get(1);
+        receiver = users.get(1);
 
-        first.setWhoAsks(sender);
-        first.setAskedFrom(resiver);
-
+        first.setSender(sender);
+        first.setReceiver(receiver);
+/*
+        sender.getSentFriends().add(first);
+        receiver.getReceiverFriends().add(first);
+        this.accountRepository.save(sender);
+        this.accountRepository.save(receiver);
+        */
         this.friendRepository.save(first);
         first = this.friendRepository.findAll().get(0);
 
         assertNotNull(first);
-        assertNotNull(first.getAskedFrom());
-        assertEquals(sender.getUsername(), first.getWhoAsks().getUsername());
-        assertEquals(sender.getId(), first.getWhoAsks().getId());
+        assertNotNull(first.getReceiver());
+        assertEquals(sender.getUsername(), first.getSender().getUsername());
+        assertEquals(sender.getId(), first.getSender().getId());
 
-        Account isItReal = this.accountRepository.getOne(first.getAskedFrom().getId());
-        assertEquals(resiver.getId(), isItReal.getId());
-        assertEquals(1, isItReal.getFriendsOf().size());
+        Account isItReal = this.accountRepository.getOne(first.getReceiver().getId());
+        assertNotNull(isItReal);
+        assertEquals(receiver.getPassword(), isItReal.getPassword());
+        assertEquals(receiver.getId(), isItReal.getId());
+        assertEquals(1, isItReal.getReceiverFriends().size());
     }
 }

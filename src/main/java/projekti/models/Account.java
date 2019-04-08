@@ -2,6 +2,7 @@ package projekti.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @AllArgsConstructor
@@ -30,11 +32,11 @@ public class Account extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "to")
     private List<StatusUpdate> wall = new ArrayList<>();
 
-    @OneToMany(mappedBy  = "whoAsks")
-    private List<Friend> friends = new ArrayList<>();
+    @OneToMany(mappedBy  = "receiver")
+    private List<Friend> receiverFriends = new ArrayList<>();
 
-    @OneToMany(mappedBy  = "askedFrom")
-    private List<Friend> friendsOf = new ArrayList<>();
+    @OneToMany(mappedBy  = "sender")
+    private List<Friend> sentFriends = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner")
     private List<Image> images = new ArrayList<>();

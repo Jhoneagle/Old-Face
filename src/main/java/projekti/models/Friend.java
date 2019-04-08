@@ -2,12 +2,14 @@ package projekti.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @AllArgsConstructor
@@ -17,9 +19,10 @@ public class Friend extends AbstractPersistable<Long> {
     private Long status;
     private LocalDate timestamp;
 
-    @ManyToOne
-    private Account whoAsks;
 
     @ManyToOne
-    private Account askedFrom;
+    private Account sender;
+
+    @ManyToOne
+    private Account receiver;
 }

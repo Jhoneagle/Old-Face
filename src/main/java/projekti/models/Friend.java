@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Friend extends AbstractPersistable<Long> {
-    //private String usernameOfWhoAsks;
     private Long status;
     private LocalDate timestamp;
 
@@ -24,14 +23,4 @@ public class Friend extends AbstractPersistable<Long> {
 
     @ManyToOne
     private Account receiver;
-    /*
-    public void setSender(Account sender) {
-        this.sender = sender;
-        sender.getSentFriends().add(this);
-    }
-    
-    public void setReceiver(Account receiver) {
-        this.receiver = receiver;
-        receiver.getReceiverFriends().add(this);
-    }*/
 }

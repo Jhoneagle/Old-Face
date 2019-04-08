@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import projekti.repository.FriendRepository;
 
 @Controller
 public class DefaultController {
-
     @Autowired
     private FriendRepository friendRepository;
 
@@ -30,7 +28,6 @@ public class DefaultController {
         time = LocalDate.now();
         Friend first = createFriend(0, time);
         this.friendRepository.save(first);
-        first = this.friendRepository.findByTimestamp(time);
 
         Account sender = createAccount("admin", "admin");
         Account receiver = createAccount("owner", "owner");
@@ -60,14 +57,14 @@ public class DefaultController {
         return "redirect:/";
     }
     
-    public static Friend createFriend(long status, LocalDate time) {
+    private Friend createFriend(long status, LocalDate time) {
         Friend first = new Friend();
         first.setStatus(status);
         first.setTimestamp(time);
         return first;
     }
 
-    public static Account createAccount(String username, String password) {
+    private Account createAccount(String username, String password) {
         Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);

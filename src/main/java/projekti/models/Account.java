@@ -29,6 +29,9 @@ public class Account extends AbstractPersistable<Long> {
     private String email;
     private LocalDate born;
 
+    @OneToMany(mappedBy = "creator")
+    private List<StatusUpdate> posts = new ArrayList<>();
+
     @OneToMany(mappedBy = "to")
     private List<StatusUpdate> wall = new ArrayList<>();
 

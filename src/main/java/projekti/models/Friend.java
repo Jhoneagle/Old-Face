@@ -6,7 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)

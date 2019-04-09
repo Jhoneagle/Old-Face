@@ -2,15 +2,14 @@ package projekti.repository;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.runner.RunWith;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.models.Friend;
-import projekti.models.Account;
 
 import java.time.LocalDate;
 import java.util.List;

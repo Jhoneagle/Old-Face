@@ -6,7 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -17,6 +18,7 @@ import javax.persistence.ManyToOne;
 public class Reaction extends AbstractPersistable<Long> {
     private String content;
     private Long status;
+    private LocalDate timestamp;
 
     @ManyToOne
     private Account who;

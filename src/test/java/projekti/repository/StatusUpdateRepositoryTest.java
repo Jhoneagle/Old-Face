@@ -2,13 +2,14 @@ package projekti.repository;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.runner.RunWith;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
+import projekti.models.StatusUpdate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,6 +35,26 @@ public class StatusUpdateRepositoryTest {
     @Test
     @Transactional
     public void addSimpleStatusUpdate() {
+        LocalDate time = LocalDate.now();
+        StatusUpdate status = TestUtilities.createStatusUpdate("test", time);
+        this.statusUpdateRepository.save(status);
 
+        status = this.statusUpdateRepository.findByTimestamp(time);
+        assertNotNull(status);
+        assertEquals("test", status.getContent());
+    }
+
+    @Test
+    @Transactional
+    public void addMultipleSimpleStatusUpdate() {
+        LocalDate time = LocalDate.now();
+        StatusUpdate status = TestUtilities.createStatusUpdate("test", time);
+        this.statusUpdateRepository.save(status);
+
+        status = TestUtilities.createStatusUpdate("second", time);
+        this.statusUpdateRepository.save(status);
+
+        List<StatusUpdate> all = this.statusUpdateRepository.findAll();
+        assertEquals(2, all.size());
     }
 }

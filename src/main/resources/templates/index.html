@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout_front}">
     <head>
         <meta charset="UTF-8" />
         <title>Hello world</title>
     </head>
     <body>
-
-        <h1 th:text="${'Hello ' + message}">Hello world</h1>
+        <div layout:fragment="content" class="container">
+            <h1 th:text="${'Hello ' + message}">Hello world</h1>
+        </div>
     </body>
 </html>

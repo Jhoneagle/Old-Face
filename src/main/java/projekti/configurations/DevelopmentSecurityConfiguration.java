@@ -35,6 +35,7 @@ public class DevelopmentSecurityConfiguration extends WebSecurityConfigurerAdapt
                 .antMatchers("/h2-console", "/h2-console/**").permitAll()
                 .antMatchers(
                         "/",
+                        "/register",
                         "/js/**",
                         "/css/**",
                         "/img/**").permitAll()

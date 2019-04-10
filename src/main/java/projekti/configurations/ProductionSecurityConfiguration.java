@@ -28,6 +28,7 @@ public class ProductionSecurityConfiguration extends WebSecurityConfigurerAdapte
                 .antMatchers("/").permitAll()
                 .antMatchers(
                         "/",
+                        "/register",
                         "/js/**",
                         "/css/**",
                         "/img/**").permitAll()

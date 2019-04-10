@@ -6,7 +6,95 @@
     </head>
     <body>
         <div layout:fragment="content" class="container">
-            <p>register</p>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <h1>Login page</h1>
+                    <form th:action="@{/register}" method="post">
+                        <div th:if="${param.usernameError}" class="alert alert-danger">
+                            Username has been already taken.
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>:
+                            <input type="text"
+                                   id="username"
+                                   name="username"
+                                   class="form-control"
+                                   autofocus="autofocus"
+                                   placeholder="Username">
+                        </div>
+                        <div th:if="${param.passwordError}" class="alert alert-danger">
+                            Password doesn't fit the requirements.
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>:
+                            <input type="password"
+                                   id="password"
+                                   name="password"
+                                   class="form-control"
+                                   placeholder="Password"
+                                   aria-describedby="passwordHelpBlock">
+                        </div>
+                        <p id="passwordHelpBlock" class="form-text text-muted">
+                            Your password must be 8-20 characters long, contain at least one uppercase letter, one lowercase letter and one number and must not contain spaces, special characters, or emoji.
+                        </p>
+                        <div th:if="${param.passwordAgainError}" class="alert alert-danger">
+                            Passwords don't match.
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordAgain">Rewrite password</label>:
+                            <input type="password"
+                                   id="passwordAgain"
+                                   name="passwordAgain"
+                                   class="form-control"
+                                   placeholder="Password"
+                                   aria-describedby="passwordHelpBlock">
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName">First name</label>:
+                            <input type="text"
+                                   id="firstName"
+                                   name="firstName"
+                                   class="form-control"
+                                   autofocus="autofocus"
+                                   placeholder="First name">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last name</label>:
+                            <input type="text"
+                                   id="lastName"
+                                   name="lastName"
+                                   class="form-control"
+                                   autofocus="autofocus"
+                                   placeholder="Last name">
+                        </div>
+                        <div th:if="${param.nicknameError}">
+                            <div class="alert alert-danger">
+                                Nickname is not available.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nickname">Nickname (Expression that other people can use to find you)</label>:
+                            <input type="text"
+                                   id="nickname"
+                                   name="nickname"
+                                   class="form-control"
+                                   autofocus="autofocus"
+                                   placeholder="Nickname">
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <input type="submit"
+                                           name="register-submit"
+                                           id="register-submit"
+                                           class="form-control btn btn-info"
+                                           value="Register">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </body>
 </html>

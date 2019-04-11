@@ -16,8 +16,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@Profile("default")
-public class DevelopmentSecurityConfiguration extends WebSecurityConfigurerAdapter {
+@Profile("test")
+public class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier("customUserDetailsService")
     private UserDetailsService userDetailsService;

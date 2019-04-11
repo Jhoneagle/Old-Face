@@ -8,9 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import projekti.models.Account;
-import projekti.repository.AccountRepository;
 import projekti.services.AccountService;
+import projekti.utils.ValidationException;
 
 import java.util.Map;
 
@@ -33,8 +32,7 @@ public class DefaultController {
     @GetMapping("/home")
     public String homeRedirect() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Account user = this.accountService.findByUsername(auth.getName());
-        return "redirect:/old-face/" + user.getNickname();
+        return "redirect:/old-face/" + this.accountService.findByUsername(auth.getName()).getNickname();
     }
 
     @GetMapping("/register")
@@ -44,19 +42,11 @@ public class DefaultController {
 
     @PostMapping("/register")
     public String createAccount(@RequestParam Map<String, String> params) {
-        String error = this.accountService.create(params);
-
-        switch (error) {
-            case ("username"):
-                return "redirect:/register?usernameError";
-            case ("password"):
-                return "redirect:/register?passwordError";
-            case ("passwordAgain"):
-                return "redirect:/register?passwordAgainError";
-            case ("nickname"):
-                return "redirect:/register?nicknameError";
-            default:
-                return "redirect:/login";
+        try {
+            this.accountService.create(params);
+            return "redirect:/login";
+        } catch (ValidationException exp) {
+            return "redirect:/register?" + exp.getEffects();
         }
     }
 }

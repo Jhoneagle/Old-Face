@@ -93,6 +93,17 @@
             <version>2.3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils-core</artifactId>
+            <version>1.8.3</version>
+        </dependency>
+
         <!-- TMC -->
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>

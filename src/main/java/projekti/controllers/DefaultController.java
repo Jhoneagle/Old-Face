@@ -5,13 +5,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import projekti.models.AccountModel;
 import projekti.services.AccountService;
-import projekti.utils.ValidationException;
 
-import java.util.Map;
+import javax.validation.Valid;
 
 @Controller
 public class DefaultController {
@@ -36,17 +37,17 @@ public class DefaultController {
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(@ModelAttribute AccountModel accountModel) {
         return "register";
     }
 
     @PostMapping("/register")
-    public String createAccount(@RequestParam Map<String, String> params) {
-        try {
-            this.accountService.create(params);
-            return "redirect:/login";
-        } catch (ValidationException exp) {
-            return "redirect:/register?" + exp.getEffects();
+    public String createAccount(@Valid @ModelAttribute AccountModel accountModel, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "register";
         }
+
+        this.accountService.create(accountModel);
+        return "redirect:/login";
     }
 }

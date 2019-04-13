@@ -20,8 +20,7 @@ public class DefaultController {
     private AccountService accountService;
 
     @GetMapping("/")
-    public String helloWorld(Model model) {
-        model.addAttribute("message", "World!");
+    public String helloWorld() {
         return "index";
     }
 

@@ -17,4 +17,6 @@ public class MainService {
     public Account findByNickname(String nickname) {
         return this.accountRepository.findByNickname(nickname);
     }
+
+
 }

@@ -5,19 +5,19 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import projekti.models.Account;
-import projekti.repository.AccountRepository;
+import projekti.models.AccountModel;
+import projekti.services.AccountService;
 
-import java.util.Map;
+import javax.validation.Valid;
 
 @Controller
 public class DefaultController {
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @GetMapping("/")
     public String helloWorld(Model model) {
@@ -33,18 +33,21 @@ public class DefaultController {
     @GetMapping("/home")
     public String homeRedirect() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Account user = this.accountRepository.findByUsername(auth.getName());
-        return "redirect:/old-face/" + user.getNickname();
+        return "redirect:/old-face/" + this.accountService.findByUsername(auth.getName()).getNickname();
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(@ModelAttribute AccountModel accountModel) {
         return "register";
     }
 
     @PostMapping("/register")
-    public String createAccount(@RequestParam Map<String, String> params) {
+    public String createAccount(@Valid @ModelAttribute AccountModel accountModel, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "register";
+        }
 
+        this.accountService.create(accountModel);
         return "redirect:/login";
     }
 }

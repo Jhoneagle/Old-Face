@@ -1,12 +1,91 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout_front}">
-<head>
-    <meta charset="UTF-8" />
-    <title>Hello world</title>
-</head>
-<body>
-    <div layout:fragment="content" class="container">
-        <p>register</p>
-    </div>
-</body>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout}">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Register</title>
+    </head>
+    <body>
+        <div layout:fragment="content" class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <h1>Login page</h1>
+                    <form th:action="@{/register}" th:object="${accountModel}" method="post">
+                        <div class="form-group">
+                            <label for="username">Username</label>:
+                            <input type="text"
+                                   id="username"
+                                   name="username"
+                                   class="form-control"
+                                   autofocus="autofocus"
+                                   th:field="*{username}" />
+                            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>:
+                            <input type="password"
+                                   id="password"
+                                   name="password"
+                                   class="form-control"
+                                   th:field="*{password}"
+                                   aria-describedby="passwordHelpBlock" />
+                            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        </div>
+                        <p id="passwordHelpBlock" class="form-text text-muted">
+                            Your password must be 8-20 characters long, contain at least one uppercase letter, one lowercase letter and one number and must not contain spaces, special characters, or emoji.
+                        </p>
+                        <div class="form-group">
+                            <label for="passwordAgain">Confirm password</label>:
+                            <input type="password"
+                                   id="passwordAgain"
+                                   name="passwordAgain"
+                                   class="form-control"
+                                   th:field="*{passwordAgain}" />
+                            <div th:if="${#fields.hasErrors('passwordAgain')}" th:errors="*{passwordAgain}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName">First name</label>:
+                            <input type="text"
+                                   id="firstName"
+                                   name="firstName"
+                                   class="form-control"
+                                   autofocus="autofocus"
+                                   th:field="*{firstName}" />
+                            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last name</label>:
+                            <input type="text"
+                                   id="lastName"
+                                   name="lastName"
+                                   class="form-control"
+                                   autofocus="autofocus"
+                                   th:field="*{lastName}" />
+                            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nickname">Nickname (Expression that other people can use to find you)</label>:
+                            <input type="text"
+                                   id="nickname"
+                                   name="nickname"
+                                   class="form-control"
+                                   autofocus="autofocus"
+                                   th:field="*{nickname}" />
+                            <div th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6 col-sm-offset-3">
+                                    <input type="submit"
+                                           name="register-submit"
+                                           id="register-submit"
+                                           class="form-control btn btn-info"
+                                           value="Register">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

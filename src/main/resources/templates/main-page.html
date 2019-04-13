@@ -1,13 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout_front}">
-<head>
-    <meta charset="UTF-8" />
-    <title>Welcome</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout}">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Home</title>
+    </head>
     <body>
         <div layout:fragment="content" class="container">
             <h1 th:text="${'logged in as ' + username}">Welcome</h1>
-            <a th:href="@{/logout}">Sign Out</a>
         </div>
     </body>
 </html>

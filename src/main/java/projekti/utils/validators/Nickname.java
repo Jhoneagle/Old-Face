@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Constraint(validatedBy = { NicknameValidator.class })
 public @interface Nickname {
-    String message() default "Nickname Must Be unique.";
+    String message() default "Nickname must be unique!";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 

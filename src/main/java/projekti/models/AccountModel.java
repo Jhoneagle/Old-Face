@@ -13,14 +13,14 @@ import javax.validation.constraints.Pattern;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldMatch(first = "password", second = "passwordAgain", message = "The password fields must match")
+@FieldMatch(first = "password", second = "passwordAgain", message = "The password fields must match!")
 public class AccountModel {
     @NotEmpty
     @Username
     private String username;
 
     @NotEmpty
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$", message = "Invalid Password!")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$", message = "Invalid password!")
     private String password;
 
     @NotEmpty

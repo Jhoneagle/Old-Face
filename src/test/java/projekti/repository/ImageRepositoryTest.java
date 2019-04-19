@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.models.Image;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class ImageRepositoryTest {
         Image image = TestUtilities.createImage("test.jpeg", "test image", "image/jpeg", time);
         this.imageRepository.save(image);
 
-        image = this.imageRepository.findByTimestamp(time);
+        image = this.imageRepository.findAll().get(0);
         assertNotNull(image);
         assertEquals("image/jpeg", image.getContentType());
         assertEquals("test.jpeg", image.getName());

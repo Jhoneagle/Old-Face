@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import projekti.models.Account;
 import projekti.models.Friend;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

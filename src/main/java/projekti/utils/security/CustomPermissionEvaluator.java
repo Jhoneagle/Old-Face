@@ -1,15 +1,12 @@
 package projekti.utils.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import projekti.models.Account;
 import projekti.models.Friend;
 import projekti.repository.AccountRepository;
-import projekti.services.AccountService;
 
 import java.io.Serializable;
 

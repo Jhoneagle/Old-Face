@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.models.StatusUpdate;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class StatusUpdateRepositoryTest {
         StatusUpdate status = TestUtilities.createStatusUpdate("test", time);
         this.statusUpdateRepository.save(status);
 
-        status = this.statusUpdateRepository.findByTimestamp(time);
+        status = this.statusUpdateRepository.findAll().get(0);
         assertNotNull(status);
         assertEquals("test", status.getContent());
     }

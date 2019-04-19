@@ -14,10 +14,8 @@ import projekti.TestUtilities;
 import projekti.models.Account;
 import projekti.repository.AccountRepository;
 
-import static org.fluentlenium.core.filter.FilterConstructor.*;
-import static org.junit.Assert.*;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)

@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.models.Friend;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

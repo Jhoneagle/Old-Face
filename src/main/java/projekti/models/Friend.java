@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class Friend extends AbstractPersistable<Long> {
     private Long status;
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
     @ManyToOne
     private Account sender;

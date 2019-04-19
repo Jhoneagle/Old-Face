@@ -52,4 +52,9 @@ public class Account extends AbstractPersistable<Long> {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> authorities = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return username;
+    }
 }

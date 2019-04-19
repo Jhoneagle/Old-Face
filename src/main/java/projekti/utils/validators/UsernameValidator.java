@@ -13,8 +13,8 @@ public class UsernameValidator implements ConstraintValidator<Username, String> 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext constraintValidatorContext) {
         // null values are valid
-        if (username == null ) {
-            return true;
+        if (username == null) {
+            return false;
         }
 
         return accountService.findByUsername(username) == null;

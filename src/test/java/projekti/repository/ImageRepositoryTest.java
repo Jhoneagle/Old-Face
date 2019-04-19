@@ -12,6 +12,7 @@ import projekti.TestUtilities;
 import projekti.models.Image;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,7 @@ public class ImageRepositoryTest {
     @Test
     @Transactional
     public void addSimpleImage() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         Image image = TestUtilities.createImage("test.jpeg", "test image", "image/jpeg", time);
         this.imageRepository.save(image);
 
@@ -49,7 +50,7 @@ public class ImageRepositoryTest {
     @Test
     @Transactional
     public void addMultipleSimpleImage() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         Image image = TestUtilities.createImage("test.jpeg", "test image", "image/jpeg", time);
         this.imageRepository.save(image);
 

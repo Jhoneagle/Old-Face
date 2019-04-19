@@ -12,6 +12,7 @@ import projekti.TestUtilities;
 import projekti.models.Reaction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -32,7 +33,7 @@ public class ReactionRepositoryTest {
     @Test
     @Transactional
     public void addSimpleReaction() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         Reaction reaction = TestUtilities.createReaction("amazing", 1L, time);
         this.reactionRepository.save(reaction);
 
@@ -45,7 +46,7 @@ public class ReactionRepositoryTest {
     @Test
     @Transactional
     public void addMultipleSimpleStatusUpdate() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         Reaction reaction = TestUtilities.createReaction("amazing", 1L, time);
         this.reactionRepository.save(reaction);
 

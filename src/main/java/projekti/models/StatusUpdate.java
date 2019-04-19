@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 public class StatusUpdate extends AbstractPersistable<Long> {
     private String content;
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
     @OneToOne
     private Image image;
@@ -34,4 +34,9 @@ public class StatusUpdate extends AbstractPersistable<Long> {
 
     @OneToMany(mappedBy = "statusUpdate")
     private List<Reaction> reactions = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return content;
+    }
 }

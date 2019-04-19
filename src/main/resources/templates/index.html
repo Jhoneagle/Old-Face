@@ -1,12 +1,70 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout}">
+<html xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout}">
     <head>
-        <meta charset="UTF-8" />
         <title>Main Page</title>
+
+        <style>
+            /* Remove the navbar's default margin-bottom and rounded borders */
+            .navbar {
+                margin-bottom: 0;
+                border-radius: 0;
+            }
+
+            /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+            .row.content {height: 450px}
+
+            /* Set gray background color and 100% height */
+            .sidenav {
+                padding-top: 20px;
+                background-color: #f1f1f1;
+                height: 100%;
+            }
+
+            /* On small screens, set height to 'auto' for sidenav and grid */
+            @media screen and (max-width: 767px) {
+                .sidenav {
+                    height: auto;
+                    padding: 15px;
+                }
+                .row.content {height:auto;}
+            }
+        </style>
     </head>
     <body>
         <div layout:fragment="content" class="container">
-            <h1 th:text="${'Hello ' + message}">Hello world</h1>
+            <div class="container-fluid text-center">
+                <div class="row content">
+                    <div class="col-sm-2 sidenav">
+                        <p>
+
+                        </p>
+                        <p>
+
+                        </p>
+                        <p>
+
+                        </p>
+                    </div>
+                    <div class="col-sm-8 text-left">
+                        <h1>Welcome to Old Face</h1>
+                        <p>
+                            Pls login or register to continue into the application.
+                        </p>
+
+                        <hr>
+
+                        <h3>About</h3>
+
+                        <p>
+                            Old Face is shortly said Facebook without adds, stories and/or
+                            any other annoying things you might have seen coming to Facebook in past couple years.
+                        </p>
+                    </div>
+                    <div class="col-sm-2 sidenav">
+
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

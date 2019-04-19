@@ -12,9 +12,8 @@ public class NicknameValidator implements ConstraintValidator<Nickname, String> 
 
     @Override
     public boolean isValid(String nickname, ConstraintValidatorContext constraintValidatorContext) {
-        // null values are valid
-        if (nickname == null ) {
-            return true;
+        if (nickname == null) {
+            return false;
         }
 
         return accountService.findByNickname(nickname) == null;

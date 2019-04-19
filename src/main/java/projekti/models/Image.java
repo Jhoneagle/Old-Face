@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class Image extends AbstractPersistable<Long> {
     private String description;
     private String filename;
     private String contentType;
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)

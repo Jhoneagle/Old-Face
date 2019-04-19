@@ -1,13 +1,11 @@
 package projekti;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import projekti.models.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class TestUtilities {
-    public static Friend createFriend(long status, LocalDate time) {
+    public static Friend createFriend(long status, LocalDateTime time) {
         Friend first = new Friend();
         first.setStatus(status);
         first.setTimestamp(time);
@@ -21,14 +19,14 @@ public class TestUtilities {
         return account;
     }
 
-    public static StatusUpdate createStatusUpdate(String content, LocalDate time) {
+    public static StatusUpdate createStatusUpdate(String content, LocalDateTime time) {
         StatusUpdate status = new StatusUpdate();
         status.setContent(content);
         status.setTimestamp(time);
         return status;
     }
 
-    public static Image createImage(String filename, String description, String contentType, LocalDate time) {
+    public static Image createImage(String filename, String description, String contentType, LocalDateTime time) {
         Image image = new Image();
         image.setTimestamp(time);
         image.setContentType(contentType);
@@ -38,7 +36,7 @@ public class TestUtilities {
         return image;
     }
 
-    public static Reaction createReaction(String content, Long status, LocalDate time) {
+    public static Reaction createReaction(String content, Long status, LocalDateTime time) {
         Reaction reaction = new Reaction();
         reaction.setContent(content);
         reaction.setStatus(status);

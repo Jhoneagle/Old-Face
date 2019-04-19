@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.models.StatusUpdate;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -36,11 +36,11 @@ public class StatusUpdateRepositoryTest {
     @Test
     @Transactional
     public void addSimpleStatusUpdate() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         StatusUpdate status = TestUtilities.createStatusUpdate("test", time);
         this.statusUpdateRepository.save(status);
 
-        status = this.statusUpdateRepository.findByTimestamp(time);
+        status = this.statusUpdateRepository.findAll().get(0);
         assertNotNull(status);
         assertEquals("test", status.getContent());
     }
@@ -48,7 +48,7 @@ public class StatusUpdateRepositoryTest {
     @Test
     @Transactional
     public void addMultipleSimpleStatusUpdate() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         StatusUpdate status = TestUtilities.createStatusUpdate("test", time);
         this.statusUpdateRepository.save(status);
 

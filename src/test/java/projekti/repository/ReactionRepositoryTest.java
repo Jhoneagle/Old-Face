@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.models.Reaction;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -32,11 +32,11 @@ public class ReactionRepositoryTest {
     @Test
     @Transactional
     public void addSimpleReaction() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         Reaction reaction = TestUtilities.createReaction("amazing", 1L, time);
         this.reactionRepository.save(reaction);
 
-        reaction = this.reactionRepository.findByTimestamp(time);
+        reaction = this.reactionRepository.findAll().get(0);
         assertNotNull(reaction);
         assertEquals("amazing", reaction.getContent());
         assertEquals(1, (long) reaction.getStatus());
@@ -45,7 +45,7 @@ public class ReactionRepositoryTest {
     @Test
     @Transactional
     public void addMultipleSimpleStatusUpdate() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         Reaction reaction = TestUtilities.createReaction("amazing", 1L, time);
         this.reactionRepository.save(reaction);
 

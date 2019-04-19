@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.models.Friend;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -35,7 +35,7 @@ public class FriendRepositoryTest {
     @Test
     @Transactional
     public void addSimpleUnrelatedFriend() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         Friend first = TestUtilities.createFriend(12, time);
 
         this.friendRepository.save(first);
@@ -49,7 +49,7 @@ public class FriendRepositoryTest {
     @Test
     @Transactional
     public void addMultipleSimpleUnrelatedFriend() {
-        LocalDate time = LocalDate.now();
+        LocalDateTime time = LocalDateTime.now();
         Friend first = TestUtilities.createFriend(100, time);
         Friend second = TestUtilities.createFriend(0, time);
         Friend third = TestUtilities.createFriend(666, time);

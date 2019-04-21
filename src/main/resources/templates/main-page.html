@@ -10,34 +10,11 @@
                 <div class="row">
                     <div class="col-sm-3 well">
                         <div class="well">
-                            <p><a>My Profile</a></p>
+                            <p th:text="${profileName}">name of owner</p>
                             <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
                         </div>
-                        <div class="well">
-                            <p><a>Interests</a></p>
-                            <p>
-                                <span class="label label-default">News</span>
-                                <span class="label label-primary">W3Schools</span>
-                                <span class="label label-success">Labels</span>
-                                <span class="label label-info">Football</span>
-                                <span class="label label-warning">Gaming</span>
-                                <span class="label label-danger">Friends</span>
-                            </p>
-                        </div>
-                        <div class="alert alert-success fade in">
-                            <a class="close" data-dismiss="alert" aria-label="close">×</a>
-                            <p><strong>Ey!</strong></p>
-                            People are looking at your profile. Find out who.
-                        </div>
-                        <p>
-                            <a>Link</a>
-                        </p>
-                        <p>
-                            <a>Link</a>
-                        </p>
-                        <p>
-                            <a>Link</a>
-                        </p>
+                        <p><a th:href="'/old-face/' + ${whoseWall} + '/friends'">Friends</a></p>
+                        <p><a th:href="'/old-face/' + ${whoseWall} + '/album'">Album</a></p>
                     </div>
                     <div class="col-sm-7">
                         <div class="row">
@@ -58,8 +35,8 @@
                                             <div class="row">
                                                 <div class="col-sm-6 col-sm-offset-3">
                                                     <input type="submit"
-                                                           name="register-submit"
-                                                           id="register-submit"
+                                                           name="post-submit"
+                                                           id="post-submit"
                                                            class="form-control btn btn-info"
                                                            value="Post">
                                                 </div>
@@ -78,26 +55,17 @@
                                 </div>
                             </div>
                             <div class="col-sm-9">
-                                <div class="well">
+                                <div class="well text-left">
+                                    <h5>
+                                        <span class="glyphicon glyphicon-time" th:text="${#temporals.format(post.timestamp, 'dd-MM-yyyy HH:mm')}">time</span>
+                                    </h5>
                                     <p th:text="${post.content}"> content </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-2 well">
-                        <div class="thumbnail">
-                            <p>Upcoming Events:</p>
-                            <img src="paris.jpg" alt="Paris" width="400" height="300">
-                            <p><strong>Paris</strong></p>
-                            <p>Fri. 27 November 2015</p>
-                            <button class="btn btn-primary">Info</button>
-                        </div>
-                        <div class="well">
-                            <p>ADS</p>
-                        </div>
-                        <div class="well">
-                            <p>ADS</p>
-                        </div>
+
                     </div>
                 </div>
             </div>

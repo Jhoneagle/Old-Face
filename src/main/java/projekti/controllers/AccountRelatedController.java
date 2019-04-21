@@ -5,13 +5,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import projekti.models.Image;
-import projekti.models.StatusPostModel;
-import projekti.models.StatusUpdate;
+import org.springframework.web.bind.annotation.*;
+import projekti.models.*;
 import projekti.services.MainService;
 
 import javax.validation.Valid;
@@ -30,11 +25,19 @@ public class AccountRelatedController {
 
     private String goToMainPage(Model model, @PathVariable String nickname) {
         List<StatusUpdate> posts = this.mainService.getPosts(nickname);
-        Map<String, Image> profilePictures = this.mainService.getAccountsProfilePictures(this.mainService.extractPeopleFromPosts(posts));
+        Account owner = this.mainService.findByNickname(nickname);
+        List<Account> accounts = this.mainService.extractPeopleFromPosts(posts);
+
+        if (!accounts.contains(owner)) {
+            accounts.add(owner);
+        }
+
+        Map<String, Image> profilePictures = this.mainService.getAccountsProfilePictures(accounts);
 
         model.addAttribute("posts", posts);
         model.addAttribute("pictures", profilePictures);
-        model.addAttribute("whoseWall", nickname);
+        model.addAttribute("whoseWall", owner.getNickname());
+        model.addAttribute("profileName", owner.getFirstName() + " " + owner.getLastName());
         return "main-page";
     }
 
@@ -47,5 +50,40 @@ public class AccountRelatedController {
 
         this.mainService.createPost(statusPostModel, nickname);
         return "redirect:/home";
+    }
+
+    @PostMapping("/old-face/search")
+    public String search(Model model, @RequestParam String search) {
+        List<SearchResult> people = this.mainService.findPeopleWithParam(search);
+        model.addAttribute("result", people);
+        model.addAttribute("pictures", this.mainService.getProfilePicturesForSearch(people));
+        return "search-page";
+    }
+
+    @PostMapping("/old-face/ask")
+    public String askToBeFriend(@RequestParam String nickname) {
+        return "redirect:/home";
+    }
+
+    @GetMapping("/old-face/{nickname}/friends")
+    public String friendPage(Model model, @PathVariable String nickname) {
+        Account owner = this.mainService.findByNickname(nickname);
+
+
+
+        model.addAttribute("whoseWall", owner.getNickname());
+        model.addAttribute("profileName", owner.getFirstName() + " " + owner.getLastName());
+        return "friend-page";
+    }
+
+    @GetMapping("/old-face/{nickname}/album")
+    public String albumPage(Model model, @PathVariable String nickname) {
+        Account owner = this.mainService.findByNickname(nickname);
+
+        
+
+        model.addAttribute("whoseWall", owner.getNickname());
+        model.addAttribute("profileName", owner.getFirstName() + " " + owner.getLastName());
+        return "album-page";
     }
 }

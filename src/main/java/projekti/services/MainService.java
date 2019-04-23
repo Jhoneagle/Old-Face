@@ -1,6 +1,9 @@
 package projekti.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -9,9 +12,6 @@ import projekti.repository.AccountRepository;
 import projekti.repository.FriendRepository;
 import projekti.repository.ImageRepository;
 import projekti.repository.StatusUpdateRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,6 +56,16 @@ public class MainService {
         List<String> nicknames = new ArrayList<>();
 
         for (SearchResult s : searchresult) {
+            nicknames.add(s.getNickname());
+        }
+
+        return getAccountsProfilePictures(this.accountRepository.findAllByNicknameIn(nicknames));
+    }
+
+    public Map<String, Image> getFriendProfilePictures(List<FriendModel> searchresult) {
+        List<String> nicknames = new ArrayList<>();
+
+        for (FriendModel s : searchresult) {
             nicknames.add(s.getNickname());
         }
 
@@ -123,12 +133,16 @@ public class MainService {
             for (Friend friend : found.getReceiverFriends()) {
                 if (friend.getSender().getUsername().equals(user.getUsername())) {
                     model.setNotAsked(false);
+                    model.setRequest(friend.getStatus() == 0);
+                    break;
                 }
             }
 
             for (Friend friend : found.getSentFriends()) {
                 if (friend.getReceiver().getUsername().equals(user.getUsername())) {
                     model.setNotAsked(false);
+                    model.setRequest(friend.getStatus() == 0);
+                    break;
                 }
             }
 
@@ -136,5 +150,46 @@ public class MainService {
         }
 
         return result;
+    }
+
+    public List<FriendModel> getFriendRequests() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Account user = findByUsername(auth.getName());
+        List<FriendModel> requests = new ArrayList<>();
+
+        user.getReceiverFriends().stream().filter(a -> a.getStatus() == 0).forEach(a -> {
+            FriendModel pal = new FriendModel();
+            pal.setTimestamp(a.getTimestamp());
+            pal.setNickname(a.getSender().getNickname());
+            pal.setName(a.getSender().getFirstName() + " " + a.getSender().getLastName());
+
+            requests.add(pal);
+        });
+
+        return requests;
+    }
+
+    public List<FriendModel> getFriends(Account person) {
+        List<FriendModel> friends = new ArrayList<>();
+
+        person.getReceiverFriends().stream().filter(a -> a.getStatus() > 0).forEach(a -> {
+            FriendModel pal = new FriendModel();
+            pal.setTimestamp(a.getTimestamp());
+            pal.setNickname(a.getSender().getNickname());
+            pal.setName(a.getSender().getFirstName() + " " + a.getSender().getLastName());
+
+            friends.add(pal);
+        });
+
+        person.getSentFriends().stream().filter(a -> a.getStatus() > 0).forEach(a -> {
+            FriendModel pal = new FriendModel();
+            pal.setTimestamp(a.getTimestamp());
+            pal.setNickname(a.getReceiver().getNickname());
+            pal.setName(a.getReceiver().getFirstName() + " " + a.getReceiver().getLastName());
+
+            friends.add(pal);
+        });
+
+        return friends;
     }
 }

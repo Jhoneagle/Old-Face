@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
-      xmlns:sec="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout}">
+      layout:decorate="~{fragments/layout}">
     <head>
         <title>Home</title>
     </head>
@@ -16,10 +16,7 @@
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/friends'">Friends</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/album'">Album</a></p>
                     </div>
-                    <div class="col-sm-7">
-
-                    </div>
-                    <div class="col-sm-2 well">
+                    <div class="col-sm-9">
 
                     </div>
                 </div>

@@ -7,7 +7,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import projekti.models.*;
+import projekti.domain.entities.Account;
+import projekti.domain.entities.Friend;
+import projekti.domain.entities.Image;
+import projekti.domain.entities.StatusUpdate;
+import projekti.domain.models.FriendModel;
+import projekti.domain.models.SearchResult;
+import projekti.domain.models.StatusPostModel;
 import projekti.repository.AccountRepository;
 import projekti.repository.FriendRepository;
 import projekti.repository.ImageRepository;
@@ -130,18 +136,25 @@ public class MainService {
 
             model.setNotAsked(!found.getUsername().equals(user.getUsername()));
 
+            System.out.println("what the fuck: " + found.getReceiverFriends().size());
+            System.out.println("what the fuck: " + found.getSentFriends().size());
+
             for (Friend friend : found.getReceiverFriends()) {
                 if (friend.getSender().getUsername().equals(user.getUsername())) {
+                    System.out.println("happens");
                     model.setNotAsked(false);
                     model.setRequest(friend.getStatus() == 0);
+                    model.setBending(true);
                     break;
                 }
             }
 
             for (Friend friend : found.getSentFriends()) {
                 if (friend.getReceiver().getUsername().equals(user.getUsername())) {
+                    System.out.println("happens");
                     model.setNotAsked(false);
                     model.setRequest(friend.getStatus() == 0);
+                    model.setBending(false);
                     break;
                 }
             }

@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import projekti.TestUtilities;
-import projekti.models.Account;
+import projekti.domain.entities.Account;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;

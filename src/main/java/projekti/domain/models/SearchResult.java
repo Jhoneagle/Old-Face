@@ -1,4 +1,4 @@
-package projekti.models;
+package projekti.domain.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,4 +12,5 @@ public class SearchResult {
     private String name;
     private boolean notAsked;
     private boolean request;
+    private boolean bending;
 }

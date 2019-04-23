@@ -44,6 +44,9 @@
                                         </div>
                                     </form>
                                 </div>
+                                <div sec:authorize="not hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                    <p>ask to be friend!</p>
+                                </div>
                             </div>
                         </div>
 

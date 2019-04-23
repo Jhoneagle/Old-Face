@@ -7,7 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import projekti.models.*;
+import projekti.domain.entities.Account;
+import projekti.domain.entities.Image;
+import projekti.domain.entities.StatusUpdate;
+import projekti.domain.models.FriendModel;
+import projekti.domain.models.SearchResult;
+import projekti.domain.models.StatusPostModel;
 import projekti.services.MainService;
 
 import javax.validation.Valid;
@@ -37,12 +42,13 @@ public class AccountRelatedController {
 
         Map<String, Image> profilePictures = this.mainService.getAccountsProfilePictures(accounts);
         profilePictures.putAll(this.mainService.getFriendProfilePictures(friendRequests));
+        String name = owner.getFirstName() + " " + owner.getLastName();
 
         model.addAttribute("requests", friendRequests);
         model.addAttribute("posts", posts);
         model.addAttribute("pictures", profilePictures);
         model.addAttribute("whoseWall", nickname);
-        model.addAttribute("profileName", owner.getFirstName() + " " + owner.getLastName());
+        model.addAttribute("profileName", name);
         return "main-page";
     }
 
@@ -63,8 +69,10 @@ public class AccountRelatedController {
     @PostMapping("/old-face/search")
     public String search(Model model, @RequestParam String search) {
         List<SearchResult> people = this.mainService.findPeopleWithParam(search);
+        Map<String, Image> pictures = this.mainService.getProfilePicturesForSearch(people);
+
         model.addAttribute("result", people);
-        model.addAttribute("pictures", this.mainService.getProfilePicturesForSearch(people));
+        model.addAttribute("pictures", pictures);
         return "search-page";
     }
 
@@ -72,22 +80,25 @@ public class AccountRelatedController {
     public String friendPage(Model model, @PathVariable String nickname) {
         Account owner = this.mainService.findByNickname(nickname);
         List<FriendModel> friends = this.mainService.getFriends(owner);
+        String name = owner.getFirstName() + " " + owner.getLastName();
+        Map<String, Image> pictures = this.mainService.getFriendProfilePictures(friends);
 
-        model.addAttribute("pictures", this.mainService.getFriendProfilePictures(friends));
+        model.addAttribute("pictures", pictures);
         model.addAttribute("friends", friends);
         model.addAttribute("whoseWall", nickname);
-        model.addAttribute("profileName", owner.getFirstName() + " " + owner.getLastName());
+        model.addAttribute("profileName", name);
         return "friend-page";
     }
 
     @GetMapping("/old-face/{nickname}/album")
     public String albumPage(Model model, @PathVariable String nickname) {
         Account owner = this.mainService.findByNickname(nickname);
+        String name = owner.getFirstName() + " " + owner.getLastName();
 
         
 
-        model.addAttribute("whoseWall", owner.getNickname());
-        model.addAttribute("profileName", owner.getFirstName() + " " + owner.getLastName());
+        model.addAttribute("whoseWall", nickname);
+        model.addAttribute("profileName", name);
         return "album-page";
     }
 }

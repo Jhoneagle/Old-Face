@@ -1,6 +1,6 @@
 package projekti;
 
-import projekti.models.*;
+import projekti.domain.entities.*;
 
 import java.time.LocalDateTime;
 

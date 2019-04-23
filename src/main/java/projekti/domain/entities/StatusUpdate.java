@@ -1,4 +1,4 @@
-package projekti.models;
+package projekti.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

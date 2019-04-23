@@ -1,4 +1,4 @@
-package projekti.models;
+package projekti.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,17 +15,13 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Reaction extends AbstractPersistable<Long> {
-    private String content;
+public class Friend extends AbstractPersistable<Long> {
     private Long status;
     private LocalDateTime timestamp;
 
     @ManyToOne
-    private Account who;
+    private Account sender;
 
     @ManyToOne
-    private Image image;
-
-    @ManyToOne
-    private StatusUpdate statusUpdate;
+    private Account receiver;
 }

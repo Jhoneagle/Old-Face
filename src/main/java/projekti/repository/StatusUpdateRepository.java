@@ -3,8 +3,8 @@ package projekti.repository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import projekti.models.Account;
-import projekti.models.StatusUpdate;
+import projekti.domain.entities.Account;
+import projekti.domain.entities.StatusUpdate;
 
 import java.util.List;
 

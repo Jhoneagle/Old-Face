@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import projekti.TestUtilities;
-import projekti.models.Account;
+import projekti.domain.entities.Account;
 import projekti.repository.AccountRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;

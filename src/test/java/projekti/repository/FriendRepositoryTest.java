@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
-import projekti.models.Friend;
+import projekti.domain.entities.Friend;
 
 import java.time.LocalDateTime;
 import java.util.List;

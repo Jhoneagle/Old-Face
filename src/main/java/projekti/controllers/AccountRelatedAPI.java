@@ -1,10 +1,10 @@
 package projekti.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import projekti.domain.models.FriendJson;
 import projekti.services.RestService;
 
 @RestController
@@ -12,15 +12,15 @@ public class AccountRelatedAPI {
     @Autowired
     private RestService restService;
 
-    @PostMapping("/old-face/ask")
-    public String askToBeFriend(@RequestParam String nickname) {
-        //do something
-        return "redirect:/home";
+    @PostMapping("/old-face/api/ask")
+    public FriendJson askToBeFriend(@RequestBody FriendJson friendJson) {
+        this.restService.createFriendRequest(friendJson);
+        return friendJson;
     }
 
-    @PostMapping("/old-face/request/{nickname}/{accept}")
-    public String acceptRequest(@PathVariable String nickname, @PathVariable Boolean accept) {
-        //do something
-        return "redirect:/home";
+    @PostMapping("/old-face/api/request")
+    public FriendJson handleRequest(@RequestBody FriendJson friendJson) {
+        this.restService.handleRequest(friendJson);
+        return friendJson;
     }
 }

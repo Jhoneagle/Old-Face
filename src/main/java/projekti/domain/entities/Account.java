@@ -57,4 +57,8 @@ public class Account extends AbstractPersistable<Long> {
     public String toString() {
         return username;
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

@@ -4,16 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import projekti.domain.entities.Account;
 import projekti.domain.entities.Friend;
-import projekti.domain.models.FriendJson;
+import projekti.domain.entities.Reaction;
+import projekti.domain.entities.StatusUpdate;
+import projekti.domain.json.ReactionJson;
+import projekti.domain.models.CommentModel;
+import projekti.domain.json.FriendJson;
 import projekti.repository.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-@CrossOrigin("/**")
 public class RestService {
     @Autowired
     private FriendRepository friendRepository;
@@ -78,5 +82,67 @@ public class RestService {
         }
 
         this.friendRepository.save(friend);
+    }
+
+    public List<CommentModel> getCommentsOfPost(ReactionJson reactionJson) {
+        StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
+        List<Reaction> all = this.reactionRepository.findAllByStatusUpdateAndStatus(post, (long) 1);
+        List<CommentModel> result = new ArrayList<>();
+
+        for (Reaction a : all) {
+            CommentModel model = new CommentModel();
+            model.setCreator(a.getWho().getFullName());
+            model.setNickname(a.getWho().getNickname());
+            model.setContent(a.getContent());
+            model.setTimestamp(a.getTimestamp());
+
+            result.add(model);
+        }
+
+        return result;
+    }
+
+    public CommentModel createCommentForPost(ReactionJson reactionJson) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Account user = this.accountRepository.findByUsername(auth.getName());
+
+        StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
+        Reaction result = new Reaction();
+        result.setContent(reactionJson.getContent());
+        result.setStatusUpdate(post);
+        result.setTimestamp(LocalDateTime.now());
+        result.setStatus((long) 1);
+        result.setWho(user);
+
+        result = this.reactionRepository.save(result);
+
+        CommentModel model = new CommentModel();
+        model.setContent(result.getContent());
+        model.setNickname(result.getWho().getNickname());
+        model.setCreator(result.getWho().getFullName());
+        model.setTimestamp(result.getTimestamp());
+
+        return model;
+    }
+
+    public void addLikeToPost(ReactionJson reactionJson) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Account user = this.accountRepository.findByUsername(auth.getName());
+
+        StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
+
+        Reaction exist = this.reactionRepository.findByStatusUpdateAndStatusAndWho(post, (long) 0, user);
+
+        if (exist == null) {
+            Reaction result = new Reaction();
+            result.setStatusUpdate(post);
+            result.setTimestamp(LocalDateTime.now());
+            result.setStatus((long) 0);
+            result.setWho(user);
+
+            this.reactionRepository.save(result);
+        } else {
+            this.reactionRepository.delete(exist);
+        }
     }
 }

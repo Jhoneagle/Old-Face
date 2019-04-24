@@ -7,13 +7,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import projekti.domain.entities.Account;
-import projekti.domain.entities.Friend;
-import projekti.domain.entities.Image;
-import projekti.domain.entities.StatusUpdate;
+import projekti.domain.entities.*;
 import projekti.domain.models.FriendModel;
 import projekti.domain.models.SearchResult;
 import projekti.domain.models.StatusPostModel;
+import projekti.domain.models.WallPost;
 import projekti.repository.AccountRepository;
 import projekti.repository.FriendRepository;
 import projekti.repository.ImageRepository;
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MainService {
@@ -49,50 +48,44 @@ public class MainService {
 
     public Map<String, Image> getAccountsProfilePictures(List<Account> accounts) {
         List<Image> raw = this.imageRepository.findAllByStatusAndOwnerIn(1L, accounts);
-
-        Map<String, Image> result = new HashMap<>();
-        for (Image image : raw) {
-            result.put(image.getOwner().getUsername(), image);
-        }
-
-        return result;
+        return raw.stream().collect(Collectors.toMap(image -> image.getOwner().getUsername(), image -> image, (a, b) -> b));
     }
 
     public Map<String, Image> getProfilePicturesForSearch(List<SearchResult> searchresult) {
-        List<String> nicknames = new ArrayList<>();
-
-        for (SearchResult s : searchresult) {
-            nicknames.add(s.getNickname());
-        }
-
+        List<String> nicknames = searchresult.stream().map(SearchResult::getNickname).collect(Collectors.toList());
         return getAccountsProfilePictures(this.accountRepository.findAllByNicknameIn(nicknames));
     }
 
     public Map<String, Image> getFriendProfilePictures(List<FriendModel> searchresult) {
-        List<String> nicknames = new ArrayList<>();
-
-        for (FriendModel s : searchresult) {
-            nicknames.add(s.getNickname());
-        }
-
+        List<String> nicknames = searchresult.stream().map(FriendModel::getNickname).collect(Collectors.toList());
         return getAccountsProfilePictures(this.accountRepository.findAllByNicknameIn(nicknames));
     }
 
-    public List<StatusUpdate> getPosts(String nickname) {
+    public List<WallPost> getPosts(String nickname) {
         Pageable pageable = PageRequest.of(0, 25, Sort.by("timestamp").descending());
-        return this.statusUpdateRepository.findAllByTo(this.accountRepository.findByNickname(nickname), pageable);
-    }
+        List<StatusUpdate> allByTo = this.statusUpdateRepository.findAllByTo(this.accountRepository.findByNickname(nickname), pageable);
+        List<WallPost> result = new ArrayList<>();
 
-    public List<Account> extractPeopleFromPosts(List<StatusUpdate> posts) {
-        List<Account> result = new ArrayList<>();
+        allByTo.forEach(s -> {
+            WallPost current = new WallPost();
+            current.setContent(s.getContent());
+            current.setFullname(s.getCreator().getFullName());
+            current.setNickname(s.getCreator().getNickname());
+            current.setTimestamp(s.getTimestamp());
+            current.setId(s.getId());
 
-        for (StatusUpdate post : posts) {
-            if (!result.contains(post.getCreator())) {
-                result.add(post.getCreator());
-            }
-        }
+            long count = s.getReactions().stream().filter(r -> r.getStatus() == 0).count();
+            current.setLikes(count);
+
+            result.add(current);
+        });
 
         return result;
+    }
+
+    public List<Account> extractPeopleFromPosts(List<WallPost> posts) {
+        List<String> nicknames = posts.stream().map(WallPost::getNickname).collect(Collectors.toList());
+        return this.accountRepository.findAllByNicknameIn(nicknames);
     }
 
     public void createPost(StatusPostModel statusPostModel, String nickname) {
@@ -122,17 +115,17 @@ public class MainService {
                 firstName.append(" ").append(parts[i]);
             }
 
-            filtered = this.accountRepository.findAllByFirstNameContainsOrLastNameContains(firstName.toString(), lastName);
+            filtered = this.accountRepository.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(firstName.toString(), lastName);
         } else {
             String name = parts[0];
 
-            filtered = this.accountRepository.findAllByFirstNameContainsOrLastNameContains(name, name);
+            filtered = this.accountRepository.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name);
         }
 
         for (Account found : filtered) {
             SearchResult model = new SearchResult();
             model.setNickname(found.getNickname());
-            model.setName(found.getFirstName() + " " + found.getLastName());
+            model.setName(found.getFullName());
 
             model.setNotAsked(!found.getUsername().equals(user.getUsername()));
 

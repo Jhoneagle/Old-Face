@@ -4,10 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FriendJson {
+public class WallPost {
+    private String fullname;
     private String nickname;
-    private boolean accept;
+    private String content;
+    private LocalDateTime timestamp;
+    private Long likes;
+    private Long id;
 }

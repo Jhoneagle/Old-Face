@@ -13,6 +13,7 @@ import projekti.domain.entities.StatusUpdate;
 import projekti.domain.models.FriendModel;
 import projekti.domain.models.SearchResult;
 import projekti.domain.models.StatusPostModel;
+import projekti.domain.models.WallPost;
 import projekti.services.MainService;
 
 import javax.validation.Valid;
@@ -30,7 +31,7 @@ public class AccountRelatedController {
             model.addAttribute("statusPostModel", new StatusPostModel());
         }
 
-        List<StatusUpdate> posts = this.mainService.getPosts(nickname);
+        List<WallPost> posts = this.mainService.getPosts(nickname);
         Account owner = this.mainService.findByNickname(nickname);
         List<Account> accounts = this.mainService.extractPeopleFromPosts(posts);
         List<FriendModel> friendRequests = this.mainService.getFriendRequests();
@@ -42,7 +43,7 @@ public class AccountRelatedController {
 
         Map<String, Image> profilePictures = this.mainService.getAccountsProfilePictures(accounts);
         profilePictures.putAll(this.mainService.getFriendProfilePictures(friendRequests));
-        String name = owner.getFirstName() + " " + owner.getLastName();
+        String name = owner.getFullName();
 
         model.addAttribute("requests", friendRequests);
         model.addAttribute("posts", posts);
@@ -80,7 +81,7 @@ public class AccountRelatedController {
     public String friendPage(Model model, @PathVariable String nickname) {
         Account owner = this.mainService.findByNickname(nickname);
         List<FriendModel> friends = this.mainService.getFriends(owner);
-        String name = owner.getFirstName() + " " + owner.getLastName();
+        String name = owner.getFullName();
         Map<String, Image> pictures = this.mainService.getFriendProfilePictures(friends);
 
         model.addAttribute("pictures", pictures);
@@ -93,7 +94,7 @@ public class AccountRelatedController {
     @GetMapping("/old-face/{nickname}/album")
     public String albumPage(Model model, @PathVariable String nickname) {
         Account owner = this.mainService.findByNickname(nickname);
-        String name = owner.getFirstName() + " " + owner.getLastName();
+        String name = owner.getFullName();
 
         
 

@@ -51,20 +51,40 @@
                             </div>
                         </div>
 
-                        <div class="row" th:each="post : ${posts}">
+                        <div class="row" th:each="post, iStat : ${posts}">
                             <div class="col-sm-3">
                                 <div class="well">
-                                    <p th:text="${post.creator.username}"> creator </p>
+                                    <p th:text="${post.fullname}"> creator </p>
                                     <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
                                 </div>
                             </div>
-                            <div class="col-sm-9">
-                                <div class="well text-left">
-                                    <h5>
-                                        <span class="glyphicon glyphicon-time" th:text="${#temporals.format(post.timestamp, 'dd-MM-yyyy HH:mm')}">time</span>
-                                    </h5>
-                                    <p th:text="${post.content}"> content </p>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div class="well text-left">
+                                        <h5>
+                                            <span class="glyphicon glyphicon-time" th:text="${#temporals.format(post.timestamp, 'dd-MM-yyyy HH:mm')}">time</span>
+                                        </h5>
+                                        <p th:text="${post.content}"> content </p>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <p th:id="'likes'+ ${iStat.index}" th:text="${post.likes}">how many likes</p>
+                                <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
+                                        th:attr="onclick=|like('${post.id}', '${iStat.index}')|">
+                                    Like
+                                </button>
+                                <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
+                                        style="visibility: hidden" th:attr="onclick=|unlike(like('${post.id}', '${iStat.index}')|">
+                                    Unlike
+                                </button>
+                                <button type="button" class="btn btn-success" th:id="'getComments'+ ${iStat.index}"
+                                        th:attr="onclick=|getComments(like('${post.id}', '${iStat.index}')|">
+                                    Show comments
+                                </button>
+                            </div>
+                            <div class="row" id="showComments" style="visibility: hidden">
+
                             </div>
                         </div>
                     </div>
@@ -86,7 +106,7 @@
                                         <div th:id="${iStat.index} + 'button'">
                                             <button type="button" class="btn btn-success"
                                                     th:attr="onclick=|handleRequest('${person.nickname}', true, '${iStat.index}')|">Accept</button>
-                                            <button type="button" class="btn btn-success"
+                                            <button type="button" class="btn btn-danger"
                                                     th:attr="onclick=|handleRequest('${person.nickname}', false, '${iStat.index}')|">Decline</button>
                                         </div>
                                         <div>

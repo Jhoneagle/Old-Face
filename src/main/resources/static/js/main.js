@@ -75,3 +75,78 @@ http3.onreadystatechange = function() {
     document.getElementById('alternativeReject').style.visibility = 'visible';
   }
 };
+
+var http4 = new XMLHttpRequest();
+
+function like(id, index) {
+  document.getElementById('addLike' + index).style.visibility = 'hidden';
+  
+  var url = base + "/post/like";
+  var data = {
+    id: id,
+    content: ''
+  };
+  
+  http4.open("POST", url);
+  http4.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http4.send(JSON.stringify(data))
+}
+
+http4.onreadystatechange = function() {
+  if (this.readyState !== 4) {
+    return
+  }
+  
+  document.getElementById('removeLike' + index).style.visibility = 'visible';
+};
+
+var http5 = new XMLHttpRequest();
+
+function unlike(id, index) {
+  document.getElementById('removeLike' + index).style.visibility = 'hidden';
+  
+  var url = base + "/ask/post/like";
+  var data = {
+    id: id,
+    content: ''
+  };
+  
+  http5.open("POST", url);
+  http5.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http5.send(JSON.stringify(data))
+}
+
+http5.onreadystatechange = function() {
+  if (this.readyState !== 4) {
+    return
+  }
+  
+  document.getElementById('addLike' + index).style.visibility = 'visible';
+};
+
+var http6 = new XMLHttpRequest();
+
+function getComments(id, index) {
+  document.getElementById('getComments' + index).style.visibility = 'hidden';
+  
+  var url = base + "/post";
+  var data = {
+    id: id,
+    content: ''
+  };
+  
+  http6.open("POST", url);
+  http6.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http6.send(JSON.stringify(data))
+}
+
+http6.onreadystatechange = function() {
+  if (this.readyState !== 4) {
+    return
+  }
+  
+  document.getElementById('showComments').style.visibility = 'visible';
+  
+  var data = JSON.parse(this.response);
+  alert(data)
+};

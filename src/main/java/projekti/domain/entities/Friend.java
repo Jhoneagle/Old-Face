@@ -24,4 +24,9 @@ public class Friend extends AbstractPersistable<Long> {
 
     @ManyToOne
     private Account receiver;
+
+    @Override
+    public String toString() {
+        return timestamp.toString();
+    }
 }

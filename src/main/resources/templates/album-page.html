@@ -13,6 +13,7 @@
                             <p th:text="${profileName}">name of owner</p>
                             <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
                         </div>
+                        <p><a th:href="'/old-face/' + ${whoseWall}">Wall</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/friends'">Friends</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/album'">Album</a></p>
                     </div>

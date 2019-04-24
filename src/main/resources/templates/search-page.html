@@ -25,11 +25,15 @@
                                 </div>
                                 <div th:unless="${person.notAsked}" th:id="${iStat.index}">
                                     <div th:if="${person.request} and not ${person.bending}" th:id="${iStat.index} + 'button'">
-
+                                        <button type="button" class="btn btn-success"
+                                                th:attr="onclick=|cancel('${person.nickname}', '${iStat.index}')|">Cancel</button>
                                     </div>
                                 </div>
                                 <div id="alternative" style="visibility: hidden;">
                                     <p>Success</p>
+                                </div>
+                                <div id="canceled" style="visibility: hidden;">
+                                    <p>Cancel</p>
                                 </div>
                             </div>
                         </div>

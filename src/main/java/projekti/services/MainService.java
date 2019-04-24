@@ -136,25 +136,20 @@ public class MainService {
 
             model.setNotAsked(!found.getUsername().equals(user.getUsername()));
 
-            System.out.println("what the fuck: " + found.getReceiverFriends().size());
-            System.out.println("what the fuck: " + found.getSentFriends().size());
-
             for (Friend friend : found.getReceiverFriends()) {
                 if (friend.getSender().getUsername().equals(user.getUsername())) {
-                    System.out.println("happens");
                     model.setNotAsked(false);
                     model.setRequest(friend.getStatus() == 0);
-                    model.setBending(true);
+                    model.setBending(false);
                     break;
                 }
             }
 
             for (Friend friend : found.getSentFriends()) {
                 if (friend.getReceiver().getUsername().equals(user.getUsername())) {
-                    System.out.println("happens");
                     model.setNotAsked(false);
                     model.setRequest(friend.getStatus() == 0);
-                    model.setBending(false);
+                    model.setBending(true);
                     break;
                 }
             }

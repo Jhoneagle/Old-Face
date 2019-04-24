@@ -13,11 +13,27 @@
                             <p th:text="${profileName}">name of owner</p>
                             <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
                         </div>
+                        <p><a th:href="'/old-face/' + ${whoseWall}">Wall</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/friends'">Friends</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/album'">Album</a></p>
                     </div>
                     <div class="col-sm-9">
-
+                        <div class="row" th:each="person, iStat : ${friends}">
+                            <div class="col-sm-4">
+                                <div class="well">
+                                    <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="well">
+                                    <div class="row">
+                                        <a th:href="'/old-face/' + ${person.nickname}">
+                                            <span th:text="${person.name}"> creator </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

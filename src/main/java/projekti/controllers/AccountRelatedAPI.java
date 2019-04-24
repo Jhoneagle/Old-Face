@@ -18,6 +18,12 @@ public class AccountRelatedAPI {
         return friendJson;
     }
 
+    @PostMapping("/old-face/api/ask/cancel")
+    public FriendJson cancelRequest(@RequestBody FriendJson friendJson) {
+        this.restService.cancelRequest(friendJson);
+        return friendJson;
+    }
+
     @PostMapping("/old-face/api/request")
     public FriendJson handleRequest(@RequestBody FriendJson friendJson) {
         this.restService.handleRequest(friendJson);

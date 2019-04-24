@@ -7,7 +7,7 @@ function askToBeFriend(nickname, index) {
   
   var url = base + "/ask";
   var data = {
-    nickname: "nickname",
+    nickname: nickname,
     accept: 1 === 2
   };
   
@@ -26,14 +26,17 @@ http.onreadystatechange = function() {
 
 var http2 = new XMLHttpRequest();
 
-function handleRequest(nickname, accept) {
-  var url = base + "/request";
+function cancel(nickname, index) {
+  document.getElementById(index + 'button').style.visibility = 'hidden';
+  
+  var url = base + "/ask/cancel";
   var data = {
-    nickname: "nickname",
-    accept: "accept"
+    nickname: nickname,
+    accept: 1 === 2
   };
   
   http2.open("POST", url);
+  http2.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   http2.send(JSON.stringify(data))
 }
 
@@ -42,5 +45,33 @@ http2.onreadystatechange = function() {
     return
   }
   
+  document.getElementById('canceled').style.visibility = 'visible';
+};
+
+var http3 = new XMLHttpRequest();
+
+function handleRequest(nickname, accept, index) {
+  document.getElementById(index + 'button').style.visibility = 'hidden';
   
+  var url = base + "/request";
+  var data = {
+    nickname: nickname,
+    accept: accept
+  };
+  
+  http3.open("POST", url);
+  http3.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http3.send(JSON.stringify(data))
+}
+
+http3.onreadystatechange = function() {
+  if (this.readyState !== 4) {
+    return
+  }
+  
+  if (JSON.parse(this.response).accept) {
+    document.getElementById('alternativeAccept').style.visibility = 'visible';
+  } else {
+    document.getElementById('alternativeReject').style.visibility = 'visible';
+  }
 };

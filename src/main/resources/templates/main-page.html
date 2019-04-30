@@ -70,27 +70,47 @@
                             </div>
                             <div class="eow well">
                                 <span th:id="'likes'+ ${iStat.index}" th:text="${post.likes}">likes</span>
-                                <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
-                                        th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
-                                        th:style="${post.likedAlready} ? 'display:none;' : 'display:inline;'"
-                                        sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
-                                    Like
-                                </button>
-                                <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
-                                        th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
-                                        th:style="${post.likedAlready} ? 'display:inline' : 'display:none'"
-                                        sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
-                                    Unlike
-                                </button>
+                                <div th:if="${post.likedAlready}">
+                                    <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
+                                            th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
+                                            style="display: none;"
+                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                        Like
+                                    </button>
+                                    <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
+                                            th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
+                                            style="display:inline"
+                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                        Unlike
+                                    </button>
+                                </div>
+                                <div th:unless="${post.likedAlready}">
+                                    <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
+                                            th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
+                                            style="display: inline;"
+                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                        Like
+                                    </button>
+                                    <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
+                                            th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
+                                            style="display:none"
+                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                        Unlike
+                                    </button>
+                                </div>
                                 <button type="button" class="btn btn-success" th:id="'getComments'+ ${iStat.index}"
                                         th:attr="onclick=|getComments('${post.id}', '${iStat.index}')|">
                                     Show comments
                                 </button>
                             </div>
-                            <div class="row well">
-                                <ul id="showComments" style="display: none">
+                            <div class="row well" th:id="'commentsBlog'+ ${iStat.index}" style="display: none">
+                                <h4 sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
+                                <input type="text" id="comment" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))" />
+                                <button class="btn btn-success" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))"
+                                        th:attr="onclick=|createComments('${post.id}', '${iStat.index}')|">Send</button>
 
-                                </ul>
+                                <p>Comments:</p>
+                                <div id="showComments"></div>
                             </div>
                         </div>
                     </div>

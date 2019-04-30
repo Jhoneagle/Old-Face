@@ -130,6 +130,7 @@ var http6 = new XMLHttpRequest();
 
 function getComments(id, index) {
   document.getElementById('getComments' + index).style.display = 'none';
+  document.getElementById('commentsBlog' + index).style.display = 'inline';
   
   var url = base + "/post/get";
   var data = {
@@ -147,8 +148,30 @@ http6.onreadystatechange = function() {
     return
   }
   
-  document.getElementById('showComments').style.display = 'inline';
+  var response = JSON.parse(this.responseText);
+  var taskList = "";
   
-  var data = JSON.parse(this.response);
-  alert(data)
+  for (var i = 0; i < response.length; i++) {
+    var string = '<h4>' + response[i].creator + ' <small>' + response[i].timestamp + '</small></h4>' +
+      '<p>' + response[i].content + '</p>';
+    
+    taskList += string;
+  }
+  
+  document.getElementById("showComments").innerHTML = taskList;
+  document.getElementById("comment").value = ""
 };
+
+function createComments(id, index) {
+  document.getElementById('getComments' + index).style.display = 'none';
+  
+  var url = base + "/post";
+  var data = {
+    id: id,
+    content: document.getElementById("comment").value
+  };
+  
+  http6.open("POST", url);
+  http6.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http6.send(JSON.stringify(data))
+}

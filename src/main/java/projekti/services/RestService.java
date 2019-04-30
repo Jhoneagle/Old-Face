@@ -17,6 +17,7 @@ import projekti.domain.json.FriendJson;
 import projekti.repository.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,13 +118,14 @@ public class RestService {
 
     private List<CommentModel> createModelList(List<Reaction> all) {
         List<CommentModel> result = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
         for (Reaction a : all) {
             CommentModel model = new CommentModel();
             model.setCreator(a.getWho().getFullName());
             model.setNickname(a.getWho().getNickname());
             model.setContent(a.getContent());
-            model.setTimestamp(a.getTimestamp());
+            model.setTimestamp(a.getTimestamp().format(formatter));
 
             result.add(model);
         }

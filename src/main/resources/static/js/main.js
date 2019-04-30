@@ -3,7 +3,7 @@ var base = contextRoot + "old-face/api";
 var http = new XMLHttpRequest();
 
 function askToBeFriend(nickname, index) {
-  document.getElementById(index + 'button').style.visibility = 'hidden';
+  document.getElementById(index + 'button').style.display = 'none';
   
   var url = base + "/ask";
   var data = {
@@ -21,13 +21,13 @@ http.onreadystatechange = function() {
     return
   }
   
-  document.getElementById('alternative').style.visibility = 'visible';
+  document.getElementById('alternative').style.display = 'inline';
 };
 
 var http2 = new XMLHttpRequest();
 
 function cancel(nickname, index) {
-  document.getElementById(index + 'button').style.visibility = 'hidden';
+  document.getElementById(index + 'button').style.display = 'none';
   
   var url = base + "/ask/cancel";
   var data = {
@@ -45,13 +45,13 @@ http2.onreadystatechange = function() {
     return
   }
   
-  document.getElementById('canceled').style.visibility = 'visible';
+  document.getElementById('canceled').style.display = 'inline';
 };
 
 var http3 = new XMLHttpRequest();
 
 function handleRequest(nickname, accept, index) {
-  document.getElementById(index + 'button').style.visibility = 'hidden';
+  document.getElementById(index + 'button').style.display = 'none';
   
   var url = base + "/request";
   var data = {
@@ -70,16 +70,17 @@ http3.onreadystatechange = function() {
   }
   
   if (JSON.parse(this.response).accept) {
-    document.getElementById('alternativeAccept').style.visibility = 'visible';
+    document.getElementById('alternativeAccept').style.display = 'inline';
   } else {
-    document.getElementById('alternativeReject').style.visibility = 'visible';
+    document.getElementById('alternativeReject').style.display = 'inline';
   }
 };
 
 var http4 = new XMLHttpRequest();
 
 function like(id, index) {
-  document.getElementById('addLike' + index).style.visibility = 'hidden';
+  document.getElementById('addLike' + index).style.display = 'none';
+  document.getElementById('likes' + index).textContent = parseInt(document.getElementById('likes' + index).innerHTML) + 1;
   
   var url = base + "/post/like";
   var data = {
@@ -97,15 +98,16 @@ http4.onreadystatechange = function() {
     return
   }
   
-  document.getElementById('removeLike' + index).style.visibility = 'visible';
+  document.getElementById('removeLike' + index).style.display = 'inline';
 };
 
 var http5 = new XMLHttpRequest();
 
 function unlike(id, index) {
-  document.getElementById('removeLike' + index).style.visibility = 'hidden';
+  document.getElementById('removeLike' + index).style.display = 'none';
+  document.getElementById('likes' + index).textContent = parseInt(document.getElementById('likes' + index).innerHTML) - 1;
   
-  var url = base + "/ask/post/like";
+  var url = base + "/post/like";
   var data = {
     id: id,
     content: ''
@@ -121,15 +123,15 @@ http5.onreadystatechange = function() {
     return
   }
   
-  document.getElementById('addLike' + index).style.visibility = 'visible';
+  document.getElementById('addLike' + index).style.display = 'inline';
 };
 
 var http6 = new XMLHttpRequest();
 
 function getComments(id, index) {
-  document.getElementById('getComments' + index).style.visibility = 'hidden';
+  document.getElementById('getComments' + index).style.display = 'none';
   
-  var url = base + "/post";
+  var url = base + "/post/get";
   var data = {
     id: id,
     content: ''
@@ -145,7 +147,7 @@ http6.onreadystatechange = function() {
     return
   }
   
-  document.getElementById('showComments').style.visibility = 'visible';
+  document.getElementById('showComments').style.display = 'inline';
   
   var data = JSON.parse(this.response);
   alert(data)

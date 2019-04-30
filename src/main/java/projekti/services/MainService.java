@@ -65,6 +65,7 @@ public class MainService {
         Pageable pageable = PageRequest.of(0, 25, Sort.by("timestamp").descending());
         List<StatusUpdate> allByTo = this.statusUpdateRepository.findAllByTo(this.accountRepository.findByNickname(nickname), pageable);
         List<WallPost> result = new ArrayList<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         allByTo.forEach(s -> {
             WallPost current = new WallPost();
@@ -73,6 +74,9 @@ public class MainService {
             current.setNickname(s.getCreator().getNickname());
             current.setTimestamp(s.getTimestamp());
             current.setId(s.getId());
+
+            long isIt = s.getReactions().stream().filter(r -> r.getStatus() == 0 && r.getWho().getUsername().equals(auth.getName())).count();
+            current.setLikedAlready(isIt == 1);
 
             long count = s.getReactions().stream().filter(r -> r.getStatus() == 0).count();
             current.setLikes(count);

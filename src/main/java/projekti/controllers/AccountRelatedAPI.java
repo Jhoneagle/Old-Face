@@ -37,7 +37,7 @@ public class AccountRelatedAPI {
 
     @CrossOrigin(origins = "/**")
     @PostMapping("/old-face/api/post")
-    public CommentModel createCommentForPost(@RequestBody ReactionJson reactionJson) {
+    public List<CommentModel> createCommentForPost(@RequestBody ReactionJson reactionJson) {
         return this.restService.createCommentForPost(reactionJson);
     }
 
@@ -49,7 +49,7 @@ public class AccountRelatedAPI {
     }
 
     @CrossOrigin(origins = "/**")
-    @PostMapping("/old-face/api/post")
+    @PostMapping("/old-face/api/post/get")
     public List<CommentModel> getCommentsOfPost(@RequestBody ReactionJson reactionJson) {
         return this.restService.getCommentsOfPost(reactionJson);
     }

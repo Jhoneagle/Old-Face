@@ -1,6 +1,9 @@
 package projekti.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -85,8 +88,34 @@ public class RestService {
     }
 
     public List<CommentModel> getCommentsOfPost(ReactionJson reactionJson) {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("timestamp").descending());
         StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
-        List<Reaction> all = this.reactionRepository.findAllByStatusUpdateAndStatus(post, (long) 1);
+        List<Reaction> all = this.reactionRepository.findAllByStatusUpdateAndStatus(post, (long) 1, pageable);
+
+        return createModelList(all);
+    }
+
+    public List<CommentModel> createCommentForPost(ReactionJson reactionJson) {
+        StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Pageable pageable = PageRequest.of(0, 9, Sort.by("timestamp").descending());
+        List<Reaction> all = this.reactionRepository.findAllByStatusUpdateAndStatus(post, (long) 1, pageable);
+        Account user = this.accountRepository.findByUsername(auth.getName());
+
+        Reaction result = new Reaction();
+        result.setContent(reactionJson.getContent());
+        result.setStatusUpdate(post);
+        result.setTimestamp(LocalDateTime.now());
+        result.setStatus((long) 1);
+        result.setWho(user);
+
+        this.reactionRepository.save(result);
+        all.add(0, result);
+
+        return createModelList(all);
+    }
+
+    private List<CommentModel> createModelList(List<Reaction> all) {
         List<CommentModel> result = new ArrayList<>();
 
         for (Reaction a : all) {
@@ -100,29 +129,6 @@ public class RestService {
         }
 
         return result;
-    }
-
-    public CommentModel createCommentForPost(ReactionJson reactionJson) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Account user = this.accountRepository.findByUsername(auth.getName());
-
-        StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
-        Reaction result = new Reaction();
-        result.setContent(reactionJson.getContent());
-        result.setStatusUpdate(post);
-        result.setTimestamp(LocalDateTime.now());
-        result.setStatus((long) 1);
-        result.setWho(user);
-
-        result = this.reactionRepository.save(result);
-
-        CommentModel model = new CommentModel();
-        model.setContent(result.getContent());
-        model.setNickname(result.getWho().getNickname());
-        model.setCreator(result.getWho().getFullName());
-        model.setTimestamp(result.getTimestamp());
-
-        return model;
     }
 
     public void addLikeToPost(ReactionJson reactionJson) {

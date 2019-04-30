@@ -16,4 +16,5 @@ public class WallPost {
     private LocalDateTime timestamp;
     private Long likes;
     private Long id;
+    private boolean likedAlready;
 }

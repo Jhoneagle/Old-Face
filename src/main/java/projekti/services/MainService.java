@@ -7,19 +7,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import projekti.domain.entities.*;
+import projekti.domain.entities.Account;
+import projekti.domain.entities.Friend;
+import projekti.domain.entities.Image;
+import projekti.domain.entities.StatusUpdate;
 import projekti.domain.models.FriendModel;
 import projekti.domain.models.SearchResult;
 import projekti.domain.models.StatusPostModel;
 import projekti.domain.models.WallPost;
 import projekti.repository.AccountRepository;
-import projekti.repository.FriendRepository;
 import projekti.repository.ImageRepository;
 import projekti.repository.StatusUpdateRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -31,9 +32,6 @@ public class MainService {
 
     @Autowired
     private ImageRepository imageRepository;
-
-    @Autowired
-    private FriendRepository friendRepository;
 
     @Autowired
     private StatusUpdateRepository statusUpdateRepository;

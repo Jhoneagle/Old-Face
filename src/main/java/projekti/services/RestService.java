@@ -11,9 +11,9 @@ import projekti.domain.entities.Account;
 import projekti.domain.entities.Friend;
 import projekti.domain.entities.Reaction;
 import projekti.domain.entities.StatusUpdate;
+import projekti.domain.json.FriendJson;
 import projekti.domain.json.ReactionJson;
 import projekti.domain.models.CommentModel;
-import projekti.domain.json.FriendJson;
 import projekti.repository.*;
 
 import java.time.LocalDateTime;

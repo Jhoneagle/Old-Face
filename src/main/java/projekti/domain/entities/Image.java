@@ -6,7 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +27,7 @@ public class Image extends AbstractPersistable<Long> {
     private String contentType;
     private LocalDateTime timestamp;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
+
     private byte[] content;
 
     @ManyToOne

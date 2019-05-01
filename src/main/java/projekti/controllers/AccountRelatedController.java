@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.domain.entities.Account;
 import projekti.domain.entities.Image;
-import projekti.domain.entities.StatusUpdate;
 import projekti.domain.models.FriendModel;
 import projekti.domain.models.SearchResult;
 import projekti.domain.models.StatusPostModel;
@@ -60,16 +59,16 @@ public class AccountRelatedController {
         if(bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.statusPostModel", bindingResult);
             redirectAttributes.addFlashAttribute("statusPostModel", statusPostModel);
-            return "redirect:/old-face/" + nickname;
+        } else {
+            this.mainService.createPost(statusPostModel, nickname);
         }
 
-        this.mainService.createPost(statusPostModel, nickname);
-        return "redirect:/home";
+        return "redirect:/old-face/" + nickname;
     }
 
     @PostMapping("/old-face/search")
-    public String search(Model model, @RequestParam String search) {
-        List<SearchResult> people = this.mainService.findPeopleWithParam(search);
+    public String search(Model model, @RequestParam String searchField) {
+        List<SearchResult> people = this.mainService.findPeopleWithParam(searchField);
         Map<String, Image> pictures = this.mainService.getProfilePicturesForSearch(people);
 
         model.addAttribute("result", people);

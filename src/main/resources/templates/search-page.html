@@ -20,12 +20,12 @@
                                 </a>
 
                                 <div th:if="${person.notAsked}" th:id="${iStat.index} + 'button'">
-                                    <button type="button" class="btn btn-success"
+                                    <button th:id="'ask'+ ${person.nickname}" type="button" class="btn btn-success"
                                             th:attr="onclick=|askToBeFriend('${person.nickname}', '${iStat.index}')|">Ask</button>
                                 </div>
                                 <div th:unless="${person.notAsked}" th:id="${iStat.index}">
                                     <div th:if="${person.request} and not ${person.bending}" th:id="${iStat.index} + 'button'">
-                                        <button type="button" class="btn btn-success"
+                                        <button th:id="'cancel'+ ${person.nickname}" type="button" class="btn btn-success"
                                                 th:attr="onclick=|cancel('${person.nickname}', '${iStat.index}')|">Cancel</button>
                                     </div>
                                 </div>

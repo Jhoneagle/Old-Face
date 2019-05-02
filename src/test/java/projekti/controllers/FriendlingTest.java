@@ -12,10 +12,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import projekti.TestUtilities;
 import projekti.domain.entities.Account;
+import projekti.domain.entities.Friend;
 import projekti.repository.AccountRepository;
+import projekti.repository.FriendRepository;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
@@ -30,8 +34,12 @@ public class FriendlingTest extends FluentTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private FriendRepository friendRepository;
+
     @Before
     public void before() {
+        this.friendRepository.deleteAll();
         this.accountRepository.deleteAll();
 
         Account account = TestUtilities.createFullAccount("john", passwordEncoder.encode("john"), "john", "eagle");
@@ -83,6 +91,48 @@ public class FriendlingTest extends FluentTest {
         assertThat(pageSource()).contains("miina gronroos");
     }
 
+    @Test
+    public void noButtonWhileSearchItself() {
+        loginWithCredentials("meri", "meri");
+
+        find("#searchField").fill().with("Meri");
+        find("#search-submit").submit();
+
+        assertThat(pageSource()).contains("Search for Friends");
+        assertThat(pageSource()).contains("meri kuusela");
+        assertThat(pageSource()).doesNotContain("Ask");
+        assertThat(pageSource()).doesNotContain("john eagle");
+        assertThat(pageSource()).doesNotContain("miina gronroos");
+    }
+
+    @Test
+    public void canSeeFriendsAsList() {
+        Account user1 = this.accountRepository.findByUsername("john");
+        Account user2 = this.accountRepository.findByUsername("meri");
+        Account user3 = this.accountRepository.findByUsername("miina");
+
+        createFriendship(user1, user3);
+        createFriendship(user2, user3);
+
+        loginWithCredentials("miina", "miina");
+
+        assertThat(pageSource()).contains("Friends");
+        goTo("http://localhost:" + port + "/old-face/miinagronroos/friends");
+
+        assertThat(pageSource()).contains("meri kuusela");
+        assertThat(pageSource()).contains("john eagle");
+    }
+
+    private void createFriendship(Account sender, Account receiver) {
+        Friend friend = new Friend();
+        friend.setTimestamp(LocalDateTime.now());
+        friend.setStatus((long) 1);
+        friend.setSender(sender);
+        friend.setReceiver(receiver);
+
+        this.friendRepository.save(friend);
+    }
+
     private void loginWithCredentials(String username, String password) {
         goTo("http://localhost:" + port + "/login");
         assertTrue(pageSource().contains("Login"));
@@ -92,10 +142,5 @@ public class FriendlingTest extends FluentTest {
         find("#login-submit").submit();
 
         assertTrue(pageSource().contains("Home"));
-    }
-
-    private void logOut() {
-        goTo("http://localhost:" + port + "/logout");
-        assertTrue(pageSource().contains("Login"));
     }
 }

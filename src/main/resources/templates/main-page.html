@@ -105,7 +105,7 @@
                             </div>
                             <div class="row well" th:id="'commentsBlog'+ ${iStat.index}" style="display: none">
                                 <h4 sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
-                                <input type="text" id="comment" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))" />
+                                <input type="text" id="comment" name="comment" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))" />
                                 <button class="btn btn-success" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))"
                                         th:attr="onclick=|createComments('${post.id}', '${iStat.index}')|">Send</button>
 

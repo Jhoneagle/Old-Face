@@ -17,7 +17,7 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import projekti.utils.security.CustomPermissionEvaluator;
 
-@Profile({"development", "test"})
+@Profile({"default", "test"})
 @Configuration
 @EnableWebSecurity
 public class DevelopmentSecurityConfiguration extends WebSecurityConfigurerAdapter {

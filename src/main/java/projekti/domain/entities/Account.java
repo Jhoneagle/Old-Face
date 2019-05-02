@@ -1,4 +1,4 @@
-package projekti.models;
+package projekti.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,5 +56,9 @@ public class Account extends AbstractPersistable<Long> {
     @Override
     public String toString() {
         return username;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 }

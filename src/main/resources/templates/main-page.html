@@ -8,38 +8,16 @@
         <div layout:fragment="content" class="container">
             <div class="container text-center">
                 <div class="row">
-                    <div class="col-sm-3 well">
+                    <div class="col-sm-2 well">
                         <div class="well">
-                            <p><a>My Profile</a></p>
+                            <p th:text="${profileName}">name of owner</p>
                             <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
                         </div>
-                        <div class="well">
-                            <p><a>Interests</a></p>
-                            <p>
-                                <span class="label label-default">News</span>
-                                <span class="label label-primary">W3Schools</span>
-                                <span class="label label-success">Labels</span>
-                                <span class="label label-info">Football</span>
-                                <span class="label label-warning">Gaming</span>
-                                <span class="label label-danger">Friends</span>
-                            </p>
-                        </div>
-                        <div class="alert alert-success fade in">
-                            <a class="close" data-dismiss="alert" aria-label="close">×</a>
-                            <p><strong>Ey!</strong></p>
-                            People are looking at your profile. Find out who.
-                        </div>
-                        <p>
-                            <a>Link</a>
-                        </p>
-                        <p>
-                            <a>Link</a>
-                        </p>
-                        <p>
-                            <a>Link</a>
-                        </p>
+                        <p><a th:href="'/old-face/' + ${whoseWall}">Wall</a></p>
+                        <p><a th:href="'/old-face/' + ${whoseWall} + '/friends'">Friends</a></p>
+                        <p><a th:href="'/old-face/' + ${whoseWall} + '/album'">Album</a></p>
                     </div>
-                    <div class="col-sm-7">
+                    <div class="col-sm-6">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
@@ -58,8 +36,8 @@
                                             <div class="row">
                                                 <div class="col-sm-6 col-sm-offset-3">
                                                     <input type="submit"
-                                                           name="register-submit"
-                                                           id="register-submit"
+                                                           name="post-submit"
+                                                           id="post-submit"
                                                            class="form-control btn btn-info"
                                                            value="Post">
                                                 </div>
@@ -67,36 +45,107 @@
                                         </div>
                                     </form>
                                 </div>
+                                <div sec:authorize="not hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                    <p>ask to be friend!</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row" th:each="post : ${posts}">
-                            <div class="col-sm-3">
-                                <div class="well">
-                                    <p th:text="${post.creator.username}"> creator </p>
-                                    <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+                        <div class="row well" th:each="post, iStat : ${posts}">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="well">
+                                        <p th:text="${post.fullname}"> creator </p>
+                                        <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+                                    </div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="well text-left">
+                                        <h5>
+                                            <span class="glyphicon glyphicon-time" th:text="${#temporals.format(post.timestamp, 'dd-MM-yyyy HH:mm')}">time</span>
+                                        </h5>
+                                        <p th:text="${post.content}"> content </p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-9">
-                                <div class="well">
-                                    <p th:text="${post.content}"> content </p>
+                            <div class="eow well">
+                                <span th:id="'likes'+ ${iStat.index}" th:text="${post.likes}">likes</span>
+                                <div th:if="${post.likedAlready}">
+                                    <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
+                                            th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
+                                            style="display: none;"
+                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                        Like
+                                    </button>
+                                    <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
+                                            th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
+                                            style="display:inline"
+                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                        Unlike
+                                    </button>
                                 </div>
+                                <div th:unless="${post.likedAlready}">
+                                    <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
+                                            th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
+                                            style="display: inline;"
+                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                        Like
+                                    </button>
+                                    <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
+                                            th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
+                                            style="display:none"
+                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                        Unlike
+                                    </button>
+                                </div>
+                                <button type="button" class="btn btn-success" th:id="'getComments'+ ${iStat.index}"
+                                        th:attr="onclick=|getComments('${post.id}', '${iStat.index}')|">
+                                    Show comments
+                                </button>
+                            </div>
+                            <div class="row well" th:id="'commentsBlog'+ ${iStat.index}" style="display: none">
+                                <h4 sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
+                                <input type="text" id="comment" name="comment" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))" />
+                                <button class="btn btn-success" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))"
+                                        th:attr="onclick=|createComments('${post.id}', '${iStat.index}')|">Send</button>
+
+                                <p>Comments:</p>
+                                <div id="showComments"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-2 well">
-                        <div class="thumbnail">
-                            <p>Upcoming Events:</p>
-                            <img src="paris.jpg" alt="Paris" width="400" height="300">
-                            <p><strong>Paris</strong></p>
-                            <p>Fri. 27 November 2015</p>
-                            <button class="btn btn-primary">Info</button>
-                        </div>
-                        <div class="well">
-                            <p>ADS</p>
-                        </div>
-                        <div class="well">
-                            <p>ADS</p>
+                    <div class="col-sm-4 well">
+                        <div class="row" th:each="person, iStat : ${requests}">
+                            <div class="col-sm-4">
+                                <div class="well">
+                                    <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="well">
+                                    <div class="row">
+                                        <a th:href="'/old-face/' + ${person.nickname}">
+                                            <span th:text="${person.name}"> creator </span>
+                                        </a>
+                                    </div>
+                                    <div class="row">
+                                        <div th:id="${iStat.index} + 'button'">
+                                            <button type="button" class="btn btn-success"
+                                                    th:attr="onclick=|handleRequest('${person.nickname}', true, '${iStat.index}')|">Accept</button>
+                                            <button type="button" class="btn btn-danger"
+                                                    th:attr="onclick=|handleRequest('${person.nickname}', false, '${iStat.index}')|">Decline</button>
+                                        </div>
+                                        <div>
+                                            <div id="alternativeAccept" style="display:none;">
+                                                <p>Accepeted</p>
+                                            </div>
+                                            <div id="alternativeReject" style="display:none;">
+                                                <p>Declined</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

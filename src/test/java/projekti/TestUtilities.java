@@ -1,6 +1,6 @@
 package projekti;
 
-import projekti.models.*;
+import projekti.domain.entities.*;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +16,17 @@ public class TestUtilities {
         Account account = new Account();
         account.setUsername(username);
         account.setPassword(password);
+        return account;
+    }
+
+    public static Account createFullAccount(String username, String password, String firstName, String lastName) {
+        Account account = new Account();
+        account.setUsername(username);
+        account.setPassword(password);
+        account.setFirstName(firstName);
+        account.setLastName(lastName);
+        account.setNickname(firstName + lastName);
+        account.getAuthorities().add("USER");
         return account;
     }
 

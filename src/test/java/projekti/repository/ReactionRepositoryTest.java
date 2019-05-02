@@ -1,6 +1,6 @@
 package projekti.repository;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
-import projekti.models.Reaction;
+import projekti.domain.entities.Reaction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,8 +24,8 @@ public class ReactionRepositoryTest {
     @Autowired
     private ReactionRepository reactionRepository;
 
-    @Before
-    public void before() {
+    @After
+    public void after() {
         this.reactionRepository.deleteAll();
     }
 

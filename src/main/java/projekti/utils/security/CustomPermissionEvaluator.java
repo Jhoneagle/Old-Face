@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import projekti.models.Account;
-import projekti.models.Friend;
+import projekti.domain.entities.Account;
+import projekti.domain.entities.Friend;
 import projekti.repository.AccountRepository;
 
 import java.io.Serializable;

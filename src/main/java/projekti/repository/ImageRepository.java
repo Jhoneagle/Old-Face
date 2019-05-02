@@ -2,8 +2,8 @@ package projekti.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import projekti.models.Account;
-import projekti.models.Image;
+import projekti.domain.entities.Account;
+import projekti.domain.entities.Image;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,6 +1,7 @@
 package projekti.controllers;
 
 import org.fluentlenium.adapter.junit.FluentTest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import projekti.TestUtilities;
-import projekti.models.Account;
+import projekti.domain.entities.Account;
 import projekti.repository.AccountRepository;
+import projekti.repository.FriendRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -28,17 +30,24 @@ public class AuthenticationTest extends FluentTest {
     private AccountRepository accountRepository;
 
     @Autowired
+    private FriendRepository friendRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Before
     public void before() {
-        this.accountRepository.deleteAll();
-
         Account account = TestUtilities.createAccount("admin", passwordEncoder.encode("admin"));
         account.setNickname("test");
         account.getAuthorities().add("USER");
 
         this.accountRepository.save(account);
+    }
+
+    @After
+    public void after() {
+        this.accountRepository.deleteAll();
+        this.friendRepository.deleteAll();
     }
 
     @Test

@@ -1,4 +1,4 @@
-package projekti.models;
+package projekti.domain.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class Image extends AbstractPersistable<Long> {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    private byte[] content;
+    private Byte[] content;
 
     @ManyToOne
     private Account owner;

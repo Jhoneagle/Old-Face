@@ -1,15 +1,13 @@
-package projekti.models;
+package projekti.domain.json;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StatusPostModel {
-    @NotEmpty
+public class ReactionJson {
+    private Long id;
     private String content;
 }

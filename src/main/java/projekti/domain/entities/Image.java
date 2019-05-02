@@ -25,7 +25,6 @@ public class Image extends AbstractPersistable<Long> {
     private LocalDateTime timestamp;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
     private byte[] content;
 
     @ManyToOne

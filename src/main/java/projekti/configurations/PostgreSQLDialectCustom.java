@@ -1,4 +1,4 @@
-package projekti.utils;
+package projekti.configurations;
 
 import org.hibernate.dialect.PostgreSQL82Dialect;
 import org.hibernate.type.descriptor.sql.BinaryTypeDescriptor;

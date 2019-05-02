@@ -1,6 +1,7 @@
 package projekti.controllers;
 
 import org.fluentlenium.adapter.junit.FluentTest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import projekti.TestUtilities;
 import projekti.domain.entities.Account;
 import projekti.repository.AccountRepository;
+import projekti.repository.FriendRepository;
+import projekti.repository.StatusUpdateRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,12 +36,16 @@ public class InteractingTest extends FluentTest {
     private AccountRepository accountRepository;
 
     @Autowired
+    private StatusUpdateRepository statusUpdateRepository;
+
+    @Autowired
+    private FriendRepository friendRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Before
     public void before() {
-        this.accountRepository.deleteAll();
-
         Account account = TestUtilities.createFullAccount("john", passwordEncoder.encode("john"), "john", "eagle");
         accountRepository.save(account);
 
@@ -47,6 +54,13 @@ public class InteractingTest extends FluentTest {
 
         account = TestUtilities.createFullAccount("meri", passwordEncoder.encode("meri"), "meri", "kuusela");
         accountRepository.save(account);
+    }
+
+    @After
+    public void after() {
+        this.statusUpdateRepository.deleteAll();
+        this.friendRepository.deleteAll();
+        this.accountRepository.deleteAll();
     }
 
     @Test

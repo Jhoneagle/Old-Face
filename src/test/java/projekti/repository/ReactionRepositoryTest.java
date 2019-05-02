@@ -1,6 +1,6 @@
 package projekti.repository;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ public class ReactionRepositoryTest {
     @Autowired
     private ReactionRepository reactionRepository;
 
-    @Before
-    public void before() {
+    @After
+    public void after() {
         this.reactionRepository.deleteAll();
     }
 

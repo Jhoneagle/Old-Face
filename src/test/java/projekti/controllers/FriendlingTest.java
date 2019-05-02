@@ -1,6 +1,7 @@
 package projekti.controllers;
 
 import org.fluentlenium.adapter.junit.FluentTest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,9 +40,6 @@ public class FriendlingTest extends FluentTest {
 
     @Before
     public void before() {
-        this.friendRepository.deleteAll();
-        this.accountRepository.deleteAll();
-
         Account account = TestUtilities.createFullAccount("john", passwordEncoder.encode("john"), "john", "eagle");
         accountRepository.save(account);
 
@@ -50,6 +48,12 @@ public class FriendlingTest extends FluentTest {
 
         account = TestUtilities.createFullAccount("meri", passwordEncoder.encode("meri"), "meri", "kuusela");
         accountRepository.save(account);
+    }
+
+    @After
+    public void after() {
+        this.friendRepository.deleteAll();
+        this.accountRepository.deleteAll();
     }
 
     @Test

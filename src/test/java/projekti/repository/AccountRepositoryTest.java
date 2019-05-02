@@ -1,6 +1,6 @@
 package projekti.repository;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ public class AccountRepositoryTest {
     @Autowired
     private AccountRepository accountRepository;
 
-    @Before
-    public void before() {
+    @After
+    public void after() {
         this.accountRepository.deleteAll();
     }
 
@@ -118,7 +118,7 @@ public class AccountRepositoryTest {
         assertEquals("Admin", account.getFirstName());
         assertEquals("Gustaf Hällströmin katu 2B", account.getAddress());
         assertEquals("0501234678", account.getPhoneNumber());
-        assertTrue(account.getBorn().compareTo(LocalDate.of(1998, 5, 28)) == 0);
+        assertEquals(0, account.getBorn().compareTo(LocalDate.of(1998, 5, 28)));
     }
 
     @Test

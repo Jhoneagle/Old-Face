@@ -11,7 +11,12 @@
                     <div class="col-sm-3 well">
                         <div class="well">
                             <p th:text="${profileName}">name of owner</p>
-                            <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                            <div th:if="${pictures.get(profileName)}">
+                                <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                            </div>
+                            <div th:unless="${pictures.get(profileName)}">
+                                <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">
+                            </div>
                         </div>
                         <p><a th:href="'/old-face/' + ${whoseWall}">Wall</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/friends'">Friends</a></p>
@@ -21,7 +26,12 @@
                         <div class="row" th:each="person, iStat : ${friends}">
                             <div class="col-sm-4">
                                 <div class="well">
-                                    <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+                                    <div th:if="${pictures.get(person.nickname)}">
+                                        <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                                    </div>
+                                    <div th:unless="${pictures.get(person.nickname)}">
+                                        <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-8">

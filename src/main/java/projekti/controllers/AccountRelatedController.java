@@ -42,7 +42,13 @@ public class AccountRelatedController {
 
         Map<String, Image> profilePictures = this.mainService.getAccountsProfilePictures(accounts);
         profilePictures.putAll(this.mainService.getFriendProfilePictures(friendRequests));
-        String name = owner.getFullName();
+        String name;
+
+        try {
+            name = owner.getFullName();
+        } catch(Exception e) {
+            name = "";
+        }
 
         model.addAttribute("requests", friendRequests);
         model.addAttribute("posts", posts);

@@ -9,7 +9,12 @@
                 <div class="row" th:each="person, iStat : ${result}">
                     <div class="col-sm-4">
                         <div class="well">
-                            <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+                            <div th:if="${pictures.get(person.nickname)}">
+                                <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                            </div>
+                            <div th:unless="${pictures.get(person.nickname)}">
+                                <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-8">

@@ -26,7 +26,7 @@ public class Image extends AbstractPersistable<Long> {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    private Byte[] content;
+    private byte[] content;
 
     @ManyToOne
     private Account owner;

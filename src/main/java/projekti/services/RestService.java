@@ -7,10 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import projekti.domain.entities.Account;
-import projekti.domain.entities.Friend;
-import projekti.domain.entities.Reaction;
-import projekti.domain.entities.StatusUpdate;
+import projekti.domain.entities.*;
 import projekti.domain.json.FriendJson;
 import projekti.domain.json.ReactionJson;
 import projekti.domain.models.CommentModel;
@@ -152,5 +149,9 @@ public class RestService {
         } else {
             this.reactionRepository.delete(exist);
         }
+    }
+
+    public Image getImageById(Long id) {
+        return this.imageRepository.getOne(id);
     }
 }

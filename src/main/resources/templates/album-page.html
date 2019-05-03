@@ -11,7 +11,12 @@
                     <div class="col-sm-3 well">
                         <div class="well">
                             <p th:text="${profileName}">name of owner</p>
-                            <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                            <div th:if="${profilePicture}">
+                                <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                            </div>
+                            <div th:unless="${profilePicture}">
+                                <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">
+                            </div>
                         </div>
                         <p><a th:href="'/old-face/' + ${whoseWall}">Wall</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/friends'">Friends</a></p>

@@ -7,20 +7,21 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import projekti.domain.entities.Account;
 import projekti.domain.entities.Friend;
 import projekti.domain.entities.Image;
 import projekti.domain.entities.StatusUpdate;
-import projekti.domain.models.FriendModel;
-import projekti.domain.models.SearchResult;
-import projekti.domain.models.StatusPostModel;
-import projekti.domain.models.WallPost;
+import projekti.domain.models.*;
+import projekti.domain.models.validation.StatusPostModel;
 import projekti.repository.AccountRepository;
 import projekti.repository.ImageRepository;
 import projekti.repository.StatusUpdateRepository;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,17 +45,36 @@ public class MainService {
         return this.accountRepository.findByNickname(nickname);
     }
 
-    public Map<String, Image> getAccountsProfilePictures(List<Account> accounts) {
+    public Map<String, ImageModel> getAccountsProfilePictures(List<Account> accounts) {
         List<Image> raw = this.imageRepository.findAllByStatusAndOwnerIn(1L, accounts);
-        return raw.stream().collect(Collectors.toMap(image -> image.getOwner().getUsername(), image -> image, (a, b) -> b));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Map<String, ImageModel> map = new HashMap<>();
+
+        raw.forEach(image -> {
+            ImageModel temp = new ImageModel();
+            temp.setId(image.getId());
+            temp.setDescription(image.getDescription());
+            temp.setTimestamp(image.getTimestamp());
+            temp.setFullName(image.getOwner().getFullName());
+            temp.setStatus(image.getStatus());
+
+            long isIt = image.getReactions().stream().filter(r -> r.getStatus() == 0 && r.getWho().getUsername().equals(auth.getName())).count();
+            temp.setLikedAlready(isIt == 1);
+            long count = image.getReactions().stream().filter(r -> r.getStatus() == 0).count();
+            temp.setLikes(count);
+
+            map.put(image.getOwner().getNickname(), temp);
+        });
+
+        return map;
     }
 
-    public Map<String, Image> getProfilePicturesForSearch(List<SearchResult> searchresult) {
+    public Map<String, ImageModel> getProfilePicturesForSearch(List<SearchResult> searchresult) {
         List<String> nicknames = searchresult.stream().map(SearchResult::getNickname).collect(Collectors.toList());
         return getAccountsProfilePictures(this.accountRepository.findAllByNicknameIn(nicknames));
     }
 
-    public Map<String, Image> getFriendProfilePictures(List<FriendModel> searchresult) {
+    public Map<String, ImageModel> getFriendProfilePictures(List<FriendModel> searchresult) {
         List<String> nicknames = searchresult.stream().map(FriendModel::getNickname).collect(Collectors.toList());
         return getAccountsProfilePictures(this.accountRepository.findAllByNicknameIn(nicknames));
     }
@@ -75,7 +95,6 @@ public class MainService {
 
             long isIt = s.getReactions().stream().filter(r -> r.getStatus() == 0 && r.getWho().getUsername().equals(auth.getName())).count();
             current.setLikedAlready(isIt == 1);
-
             long count = s.getReactions().stream().filter(r -> r.getStatus() == 0).count();
             current.setLikes(count);
 
@@ -195,4 +214,29 @@ public class MainService {
 
         return friends;
     }
+
+    public void save(MultipartFile file, String description) {
+        Image image = new Image();
+
+        image.setFilename(file.getOriginalFilename());
+        image.setContentType(file.getContentType());
+        image.setContentLength(file.getSize());
+
+        try {
+            image.setContent(file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        image.setStatus((long) 0);
+        image.setTimestamp(LocalDateTime.now());
+        image.setDescription(description);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        image.setOwner(findByUsername(auth.getName()));
+
+        this.imageRepository.save(image);
+    }
+
+
 }

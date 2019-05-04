@@ -11,4 +11,6 @@ import java.util.List;
 public interface ImageRepository extends JpaRepository<Image, Long> {
     @EntityGraph(attributePaths = {"owner", "content"})
     List<Image> findAllByStatusAndOwnerIn(Long status, Collection<Account> owner);
+    Image findByOwnerAndStatus(Account owner, Long status);
+    List<Image> findAllByOwner(Account owner);
 }

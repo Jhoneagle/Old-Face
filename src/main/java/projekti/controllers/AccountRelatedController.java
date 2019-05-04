@@ -101,14 +101,10 @@ public class AccountRelatedController {
             model.addAttribute("pictureModel", new PictureModel());
         }
 
-        Account owner = this.mainService.findByNickname(nickname);
-        String name = owner.getFullName();
-
-
-
-        model.addAttribute("profilePicture", null);
+        model.addAttribute("album", this.mainService.getPicturesInAlbum(nickname));
+        model.addAttribute("profilePicture", this.mainService.getWallsProfilePicture(nickname));
         model.addAttribute("whoseWall", nickname);
-        model.addAttribute("profileName", name);
+        model.addAttribute("profileName", this.mainService.findByNickname(nickname).getFullName());
         return "album-page";
     }
 
@@ -118,14 +114,15 @@ public class AccountRelatedController {
             model.addAttribute("pictureModel", new PictureModel());
         }
 
-        Account owner = this.mainService.findByNickname(nickname);
-        String name = owner.getFullName();
+        model.addAttribute("current", this.mainService.getCurrentPicture(imageId));
+        List<ImageModel> around = this.mainService.picturesAround(nickname, imageId);
+        model.addAttribute("previous", around.get(0));
+        model.addAttribute("next", around.get(1));
 
-        
-
-        model.addAttribute("profilePicture", null);
+        model.addAttribute("album", this.mainService.getPicturesInAlbum(nickname));
+        model.addAttribute("profilePicture", this.mainService.getWallsProfilePicture(nickname));
         model.addAttribute("whoseWall", nickname);
-        model.addAttribute("profileName", name);
+        model.addAttribute("profileName", this.mainService.findByNickname(nickname).getFullName());
         return "album-page";
     }
 
@@ -137,9 +134,23 @@ public class AccountRelatedController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.pictureModel", bindingResult);
             redirectAttributes.addFlashAttribute("pictureModel", pictureModel);
         } else {
-            this.mainService.save(pictureModel.getFile(), pictureModel.getContent());
+            this.mainService.saveImage(pictureModel.getFile(), pictureModel.getContent());
         }
 
         return "redirect:/old-face/" + nickname + "/album";
+    }
+
+    @PreAuthorize("hasPermission('check', #nickname)")
+    @PostMapping("/old-face/{nickname}/album/{imageId}/del")
+    public String deleteImage(Model model, @PathVariable String nickname, @PathVariable Long imageId) {
+        this.mainService.deletePicture(imageId);
+        return "redirect:/old-face/" + nickname + "/album";
+    }
+
+    @PreAuthorize("hasPermission('check', #nickname)")
+    @PostMapping("/old-face/{nickname}/album/{imageId}/set")
+    public String setAsProfilePicture(Model model, @PathVariable String nickname, @PathVariable Long imageId) {
+        this.mainService.setAsProfilePicture(imageId);
+        return "redirect:/old-face/" + nickname + "/album/" + imageId;
     }
 }

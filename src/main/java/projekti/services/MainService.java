@@ -20,11 +20,9 @@ import projekti.repository.StatusUpdateRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class MainService {
@@ -47,26 +45,7 @@ public class MainService {
 
     public Map<String, ImageModel> getAccountsProfilePictures(List<Account> accounts) {
         List<Image> raw = this.imageRepository.findAllByStatusAndOwnerIn(1L, accounts);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Map<String, ImageModel> map = new HashMap<>();
-
-        raw.forEach(image -> {
-            ImageModel temp = new ImageModel();
-            temp.setId(image.getId());
-            temp.setDescription(image.getDescription());
-            temp.setTimestamp(image.getTimestamp());
-            temp.setFullName(image.getOwner().getFullName());
-            temp.setStatus(image.getStatus());
-
-            long isIt = image.getReactions().stream().filter(r -> r.getStatus() == 0 && r.getWho().getUsername().equals(auth.getName())).count();
-            temp.setLikedAlready(isIt == 1);
-            long count = image.getReactions().stream().filter(r -> r.getStatus() == 0).count();
-            temp.setLikes(count);
-
-            map.put(image.getOwner().getNickname(), temp);
-        });
-
-        return map;
+        return raw.stream().collect(Collectors.toMap(image -> image.getOwner().getNickname(), this::formImageModel, (a, b) -> b));
     }
 
     public Map<String, ImageModel> getProfilePicturesForSearch(List<SearchResult> searchresult) {
@@ -215,7 +194,7 @@ public class MainService {
         return friends;
     }
 
-    public void save(MultipartFile file, String description) {
+    public void saveImage(MultipartFile file, String description) {
         Image image = new Image();
 
         image.setFilename(file.getOriginalFilename());
@@ -238,5 +217,79 @@ public class MainService {
         this.imageRepository.save(image);
     }
 
+    public void setAsProfilePicture(Long imageId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Image image = this.imageRepository.findByOwnerAndStatus(findByUsername(auth.getName()), (long) 1);
 
+        if (image != null) {
+            image.setStatus((long) 0);
+            this.imageRepository.save(image);
+        }
+
+        Image one = this.imageRepository.getOne(imageId);
+        one.setStatus((long) 1);
+        this.imageRepository.save(one);
+    }
+
+    public ImageModel getCurrentPicture(Long imageId) {
+        Image one = this.imageRepository.getOne(imageId);
+        return formImageModel(one);
+    }
+
+    private ImageModel formImageModel(Image one) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        ImageModel model = new ImageModel();
+        model.setId(one.getId());
+        model.setDescription(one.getDescription());
+        model.setTimestamp(one.getTimestamp());
+        model.setFullName(one.getOwner().getFullName());
+        model.setStatus(one.getStatus());
+
+        long isIt = one.getReactions().stream().filter(r -> r.getStatus() == 0 && r.getWho().getUsername().equals(auth.getName())).count();
+        model.setLikedAlready(isIt == 1);
+        long count = one.getReactions().stream().filter(r -> r.getStatus() == 0).count();
+        model.setLikes(count);
+        return model;
+    }
+
+    public ImageModel getWallsProfilePicture(String nickname) {
+        Image image = this.imageRepository.findByOwnerAndStatus(findByNickname(nickname), (long) 1);
+        return formImageModel(image);
+    }
+
+    public List<ImageModel> getPicturesInAlbum(String nickname) {
+        List<Image> images = this.imageRepository.findAllByOwner(findByNickname(nickname));
+        return images.stream().map(this::formImageModel).collect(Collectors.toList());
+    }
+
+    public void deletePicture(Long imageId) {
+        Image one = this.imageRepository.getOne(imageId);
+        this.imageRepository.delete(one);
+    }
+
+    public List<ImageModel> picturesAround(String nickname, Long imageId) {
+        List<Image> images = this.imageRepository.findAllByOwner(findByNickname(nickname));
+        List<ImageModel> list = new ArrayList<>();
+
+        for (int i = 0; i < images.size(); i++) {
+            Image image = images.get(i);
+
+            if (Objects.equals(image.getId(), imageId)) {
+                if ((i - 1) >= 0) {
+                    ImageModel imageModel = formImageModel(images.get(i - 1));
+                    list.add(imageModel);
+                } else {
+                    list.add(null);
+                }
+
+                if ((i + 1) < images.size()) {
+                    ImageModel imageModel = formImageModel(images.get(i + 1));
+                    list.add(imageModel);
+                }
+            }
+        }
+
+        return list;
+    }
 }

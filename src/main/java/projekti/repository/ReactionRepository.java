@@ -7,6 +7,7 @@ import projekti.domain.entities.Image;
 import projekti.domain.entities.Reaction;
 import projekti.domain.entities.StatusUpdate;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
@@ -14,4 +15,5 @@ public interface ReactionRepository extends JpaRepository<Reaction, Long> {
     Reaction findByStatusUpdateAndStatusAndWho(StatusUpdate statusUpdate, Long status, Account who);
     List<Reaction> findAllByImageAndStatus(Image statusUpdate, Long status, Pageable pageable);
     Reaction findByImageAndStatusAndWho(Image statusUpdate, Long status, Account who);
+    void deleteAllByImage(Image image);
 }

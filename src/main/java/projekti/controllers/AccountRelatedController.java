@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.domain.entities.Account;
 import projekti.domain.models.*;
-import projekti.domain.models.validation.PictureModel;
 import projekti.domain.models.validation.StatusPostModel;
 import projekti.services.MainService;
 
@@ -52,6 +51,7 @@ public class AccountRelatedController {
         model.addAttribute("requests", friendRequests);
         model.addAttribute("posts", posts);
         model.addAttribute("pictures", profilePictures);
+        model.addAttribute("profilePicture", this.mainService.getWallsProfilePicture(nickname));
         model.addAttribute("whoseWall", nickname);
         model.addAttribute("profileName", name);
         return "main-page";
@@ -89,6 +89,7 @@ public class AccountRelatedController {
         Map<String, ImageModel> pictures = this.mainService.getFriendProfilePictures(friends);
 
         model.addAttribute("pictures", pictures);
+        model.addAttribute("profilePicture", this.mainService.getWallsProfilePicture(nickname));
         model.addAttribute("friends", friends);
         model.addAttribute("whoseWall", nickname);
         model.addAttribute("profileName", name);
@@ -97,10 +98,6 @@ public class AccountRelatedController {
 
     @GetMapping("/old-face/{nickname}/album")
     public String albumPage(Model model, @PathVariable String nickname) {
-        if (!model.containsAttribute("pictureModel")) {
-            model.addAttribute("pictureModel", new PictureModel());
-        }
-
         model.addAttribute("album", this.mainService.getPicturesInAlbum(nickname));
         model.addAttribute("profilePicture", this.mainService.getWallsProfilePicture(nickname));
         model.addAttribute("whoseWall", nickname);
@@ -110,14 +107,19 @@ public class AccountRelatedController {
 
     @GetMapping("/old-face/{nickname}/album/{imageId}")
     public String albumPage(Model model, @PathVariable String nickname, @PathVariable Long imageId) {
-        if (!model.containsAttribute("pictureModel")) {
-            model.addAttribute("pictureModel", new PictureModel());
-        }
-
         model.addAttribute("current", this.mainService.getCurrentPicture(imageId));
         List<ImageModel> around = this.mainService.picturesAround(nickname, imageId);
-        model.addAttribute("previous", around.get(0));
-        model.addAttribute("next", around.get(1));
+
+        if (around.size() > 1) {
+            model.addAttribute("previous", around.get(0));
+            model.addAttribute("next", around.get(1));
+        } else if (around.size() > 0) {
+            if (around.get(0).getId() > imageId) {
+                model.addAttribute("next", around.get(0));
+            } else {
+                model.addAttribute("previous", around.get(0));
+            }
+        }
 
         model.addAttribute("album", this.mainService.getPicturesInAlbum(nickname));
         model.addAttribute("profilePicture", this.mainService.getWallsProfilePicture(nickname));
@@ -128,15 +130,8 @@ public class AccountRelatedController {
 
     @PreAuthorize("hasPermission('albumOwner', #nickname)")
     @PostMapping("/old-face/{nickname}/album/image")
-    public String saveImage(@PathVariable String nickname, @Valid @ModelAttribute PictureModel pictureModel,
-                            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if(bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.pictureModel", bindingResult);
-            redirectAttributes.addFlashAttribute("pictureModel", pictureModel);
-        } else {
-            this.mainService.saveImage(pictureModel.getFile(), pictureModel.getContent());
-        }
-
+    public String saveImage(@PathVariable String nickname, @RequestParam String content, @RequestParam MultipartFile file) {
+        this.mainService.saveImage(file, content);
         return "redirect:/old-face/" + nickname + "/album";
     }
 

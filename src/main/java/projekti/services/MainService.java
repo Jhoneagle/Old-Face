@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import projekti.domain.entities.Account;
 import projekti.domain.entities.Friend;
@@ -16,6 +17,7 @@ import projekti.domain.models.*;
 import projekti.domain.models.validation.StatusPostModel;
 import projekti.repository.AccountRepository;
 import projekti.repository.ImageRepository;
+import projekti.repository.ReactionRepository;
 import projekti.repository.StatusUpdateRepository;
 
 import java.io.IOException;
@@ -34,6 +36,9 @@ public class MainService {
 
     @Autowired
     private StatusUpdateRepository statusUpdateRepository;
+
+    @Autowired
+    private ReactionRepository reactionRepository;
 
     public Account findByUsername(String username) {
         return this.accountRepository.findByUsername(username);
@@ -267,8 +272,10 @@ public class MainService {
         return images.stream().map(this::formImageModel).collect(Collectors.toList());
     }
 
+    @Transactional
     public void deletePicture(Long imageId) {
         Image one = this.imageRepository.getOne(imageId);
+        this.reactionRepository.deleteAllByImage(one);
         this.imageRepository.delete(one);
     }
 
@@ -283,8 +290,6 @@ public class MainService {
                 if ((i - 1) >= 0) {
                     ImageModel imageModel = formImageModel(images.get(i - 1));
                     list.add(imageModel);
-                } else {
-                    list.add(null);
                 }
 
                 if ((i + 1) < images.size()) {

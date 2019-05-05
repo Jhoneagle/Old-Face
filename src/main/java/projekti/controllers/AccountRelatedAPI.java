@@ -66,4 +66,20 @@ public class AccountRelatedAPI {
 
         return new ResponseEntity<>(image.getContent(), headers, HttpStatus.CREATED);
     }
+
+    @PostMapping("/old-face/api/image")
+    public List<CommentModel> createCommentForImage(@RequestBody ReactionJson reactionJson) {
+        return this.restService.createCommentForImage(reactionJson);
+    }
+
+    @PostMapping("/old-face/api/image/like")
+    public ReactionJson likeOfTheImage(@RequestBody ReactionJson reactionJson) {
+        this.restService.addLikeToImage(reactionJson);
+        return reactionJson;
+    }
+
+    @PostMapping("/old-face/api/image/get")
+    public List<CommentModel> getCommentsOfImage(@RequestBody ReactionJson reactionJson) {
+        return this.restService.getCommentsOfImage(reactionJson);
+    }
 }

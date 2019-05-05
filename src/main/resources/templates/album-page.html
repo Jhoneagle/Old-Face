@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{fragments/layout}">
+      xmlns:sec="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout}">
     <head>
-        <title>Home</title>
+        <title>Album</title>
     </head>
     <body>
         <div layout:fragment="content" class="container">
@@ -23,7 +23,69 @@
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/album'">Album</a></p>
                     </div>
                     <div class="col-sm-9">
+                        <div class="row">
 
+                        </div>
+                        <div class="row">
+                            <div th:if="${previous}">
+
+                            </div>
+
+                            <div th:if="${current}">
+                                <div class="row">
+
+                                </div>
+                                <div class="row">
+                                    <div class="row well">
+                                        <span th:id="'likes'" th:text="${current.likes}">likes</span>
+                                        <div th:if="${current.likedAlready}">
+                                            <button type="button" class="btn btn-success" th:id="'addLike'"
+                                                    th:attr="onclick=|likeImage('${current.id}')|"
+                                                    style="display: none;">
+                                                Like
+                                            </button>
+                                            <button type="button" class="btn btn-danger" th:id="'removeLike'"
+                                                    th:attr="onclick=|unlikeImage('${current.id}')|"
+                                                    style="display:inline">
+                                                Unlike
+                                            </button>
+                                        </div>
+                                        <div th:unless="${current.likedAlready}">
+                                            <button type="button" class="btn btn-success" th:id="'addLike'"
+                                                    th:attr="onclick=|likeImage('${current.id}'')|"
+                                                    style="display: inline;">
+                                                Like
+                                            </button>
+                                            <button type="button" class="btn btn-danger" th:id="'removeLike'"
+                                                    th:attr="onclick=|unlikeImage('${current.id}')|"
+                                                    style="display:none">
+                                                Unlike
+                                            </button>
+                                        </div>
+                                        <button type="button" class="btn btn-success" th:id="'getComments'"
+                                                th:attr="onclick=|getCommentsOfImage('${current.id}')|">
+                                            Show comments
+                                        </button>
+                                    </div>
+                                    <div class="row well" th:id="'commentsImage'" style="display: none">
+                                        <h4 sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
+                                        <input type="text" id="comment" name="comment" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))" />
+                                        <button class="btn btn-success" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))"
+                                                th:attr="onclick=|createCommentForImage('${current.id}')|">Send</button>
+
+                                        <p>Comments:</p>
+                                        <div id="showComments"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:if="${next}">
+
+                            </div>
+                        </div>
+                        <div class="row">
+
+                        </div>
                     </div>
                 </div>
             </div>

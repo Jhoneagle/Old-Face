@@ -57,7 +57,7 @@ public class AccountRelatedController {
         return "main-page";
     }
 
-    @PreAuthorize("hasPermission('permission', #nickname)")
+    @PreAuthorize("hasPermission('access', #nickname)")
     @PostMapping("/old-face/{nickname}/postTo")
     public String addPost(@PathVariable String nickname, @Valid @ModelAttribute StatusPostModel statusPostModel,
                           BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -126,7 +126,7 @@ public class AccountRelatedController {
         return "album-page";
     }
 
-    @PreAuthorize("hasPermission('authority', #nickname)")
+    @PreAuthorize("hasPermission('albumOwner', #nickname)")
     @PostMapping("/old-face/{nickname}/album/image")
     public String saveImage(@PathVariable String nickname, @Valid @ModelAttribute PictureModel pictureModel,
                             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -140,14 +140,14 @@ public class AccountRelatedController {
         return "redirect:/old-face/" + nickname + "/album";
     }
 
-    @PreAuthorize("hasPermission('check', #nickname)")
+    @PreAuthorize("hasPermission('owner', #nickname)")
     @PostMapping("/old-face/{nickname}/album/{imageId}/del")
     public String deleteImage(Model model, @PathVariable String nickname, @PathVariable Long imageId) {
         this.mainService.deletePicture(imageId);
         return "redirect:/old-face/" + nickname + "/album";
     }
 
-    @PreAuthorize("hasPermission('check', #nickname)")
+    @PreAuthorize("hasPermission('owner', #nickname)")
     @PostMapping("/old-face/{nickname}/album/{imageId}/set")
     public String setAsProfilePicture(Model model, @PathVariable String nickname, @PathVariable Long imageId) {
         this.mainService.setAsProfilePicture(imageId);

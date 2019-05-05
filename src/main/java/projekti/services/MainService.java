@@ -237,6 +237,10 @@ public class MainService {
     }
 
     private ImageModel formImageModel(Image one) {
+        if (one == null) {
+            return null;
+        }
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         ImageModel model = new ImageModel();

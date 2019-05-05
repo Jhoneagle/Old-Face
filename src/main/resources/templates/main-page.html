@@ -25,7 +25,7 @@
                     <div class="col-sm-6">
                         <div class="row">
                             <div class="col-sm-12">
-                                <div sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                <div sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
                                     <form th:action="@{/old-face/{path}/postTo(path=${whoseWall})}" th:object="${statusPostModel}" method="post">
                                         <div class="form-group">
                                             <input type="text"
@@ -50,8 +50,8 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div sec:authorize="not hasPermission('permission', #request.getAttribute('whoseWall'))">
-                                    <p>ask to be friend!</p>
+                                <div sec:authorize="not hasPermission('access', #request.getAttribute('whoseWall'))">
+
                                 </div>
                             </div>
                         </div>
@@ -78,33 +78,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="eow well">
+                            <div class="row well">
                                 <span th:id="'likes'+ ${iStat.index}" th:text="${post.likes}">likes</span>
                                 <div th:if="${post.likedAlready}">
                                     <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
                                             th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
-                                            style="display: none;"
-                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                            style="display: none;">
                                         Like
                                     </button>
                                     <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
                                             th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
-                                            style="display:inline"
-                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                            style="display:inline">
                                         Unlike
                                     </button>
                                 </div>
                                 <div th:unless="${post.likedAlready}">
                                     <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
                                             th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
-                                            style="display: inline;"
-                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                            style="display: inline;">
                                         Like
                                     </button>
                                     <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
                                             th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
-                                            style="display:none"
-                                            sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">
+                                            style="display:none">
                                         Unlike
                                     </button>
                                 </div>
@@ -114,9 +110,9 @@
                                 </button>
                             </div>
                             <div class="row well" th:id="'commentsBlog'+ ${iStat.index}" style="display: none">
-                                <h4 sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
-                                <input type="text" id="comment" name="comment" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))" />
-                                <button class="btn btn-success" sec:authorize="hasPermission('permission', #request.getAttribute('whoseWall'))"
+                                <h4 sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
+                                <input type="text" id="comment" name="comment" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))" />
+                                <button class="btn btn-success" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))"
                                         th:attr="onclick=|createComments('${post.id}', '${iStat.index}')|">Send</button>
 
                                 <p>Comments:</p>

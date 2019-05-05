@@ -17,11 +17,19 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication auth, Object targetDomainObject, Object value) {
-        if ((auth == null) || (targetDomainObject == null) || !(value instanceof String)){
+        if ((auth == null) || !(value instanceof String) || !(targetDomainObject instanceof String)){
             return false;
         }
 
-        return hasAccess(auth, value.toString());
+        if (((String) targetDomainObject).equalsIgnoreCase("access")) {
+            return isFriendOrOwner(auth, value.toString());
+        } else if (((String) targetDomainObject).equalsIgnoreCase("owner")) {
+            return isOwner(auth, value.toString());
+        } else if (((String) targetDomainObject).equalsIgnoreCase("albumOwner")) {
+            return isOwnerAndImagesNotTooMany(auth, value.toString());
+        }
+
+        return false;
     }
 
     @Override
@@ -30,10 +38,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             return false;
         }
 
-        return hasAccess(auth, value.toString());
+        return isFriendOrOwner(auth, value.toString());
     }
 
-    private boolean hasAccess(Authentication auth, String value) {
+    private boolean isFriendOrOwner(Authentication auth, String value) {
         Account user = accountRepository.findByUsername(auth.getName());
         if (user.getNickname().equals(value)) {
             return true;
@@ -52,5 +60,16 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
         return false;
+    }
+
+    private boolean isOwner(Authentication auth, String value) {
+        Account user = accountRepository.findByUsername(auth.getName());
+        return user.getNickname().equals(value);
+    }
+
+    private boolean isOwnerAndImagesNotTooMany(Authentication auth, String value) {
+        Account user = accountRepository.findByUsername(auth.getName());
+        return user.getNickname().equals(value) && user.getImages().size() < 10;
+
     }
 }

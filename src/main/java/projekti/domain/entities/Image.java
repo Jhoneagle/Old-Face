@@ -26,8 +26,8 @@ public class Image extends AbstractPersistable<Long> {
     private Long contentLength;
     private LocalDateTime timestamp;
 
-    //@Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
     private byte[] content;
 
     @ManyToOne

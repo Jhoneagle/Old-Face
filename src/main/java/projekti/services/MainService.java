@@ -13,7 +13,10 @@ import projekti.domain.entities.Account;
 import projekti.domain.entities.Friend;
 import projekti.domain.entities.Image;
 import projekti.domain.entities.StatusUpdate;
-import projekti.domain.models.*;
+import projekti.domain.models.FriendModel;
+import projekti.domain.models.ImageModel;
+import projekti.domain.models.SearchResult;
+import projekti.domain.models.WallPost;
 import projekti.domain.models.validation.StatusPostModel;
 import projekti.repository.AccountRepository;
 import projekti.repository.ImageRepository;
@@ -22,9 +25,11 @@ import projekti.repository.StatusUpdateRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class MainService {

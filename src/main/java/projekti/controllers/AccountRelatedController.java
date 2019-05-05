@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.domain.entities.Account;
-import projekti.domain.models.*;
+import projekti.domain.models.FriendModel;
+import projekti.domain.models.ImageModel;
+import projekti.domain.models.SearchResult;
+import projekti.domain.models.WallPost;
 import projekti.domain.models.validation.StatusPostModel;
 import projekti.services.MainService;
 

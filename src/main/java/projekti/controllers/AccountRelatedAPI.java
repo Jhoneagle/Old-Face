@@ -1,19 +1,17 @@
 package projekti.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import projekti.domain.entities.Image;
 import projekti.domain.json.FriendJson;
 import projekti.domain.json.ReactionJson;
 import projekti.domain.models.CommentModel;
 import projekti.services.RestService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController

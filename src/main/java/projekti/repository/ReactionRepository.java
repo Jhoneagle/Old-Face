@@ -7,7 +7,6 @@ import projekti.domain.entities.Image;
 import projekti.domain.entities.Reaction;
 import projekti.domain.entities.StatusUpdate;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {

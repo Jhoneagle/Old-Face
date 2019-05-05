@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
@@ -25,7 +26,8 @@ public class Image extends AbstractPersistable<Long> {
     private Long contentLength;
     private LocalDateTime timestamp;
 
-    @Lob
+    //@Lob
+    @Type(type = "org.hibernate.type.TextType")
     private byte[] content;
 
     @ManyToOne

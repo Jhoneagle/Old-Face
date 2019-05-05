@@ -62,7 +62,7 @@
 
                             <div th:if="${current}" class="col-sm-4 well">
                                 <div class="row">
-                                    <img th:src="@{/old-face/api/files/{id}(id=${current.id})}" alt="image" class="img-fluid">
+                                    <img th:src="@{/old-face/api/files/{id}(id=${current.id})}" alt="image" class="img-thumbnail">
                                     <p th:text="${current.description}">
                                 </div>
                                 <div class="row">

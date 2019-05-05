@@ -175,3 +175,103 @@ function createComments(id, index) {
   http6.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
   http6.send(JSON.stringify(data))
 }
+
+var http7 = new XMLHttpRequest();
+
+function likeImage(id) {
+  document.getElementById('addLike').style.display = 'none';
+  document.getElementById('likes').textContent = parseInt(document.getElementById('likes').innerHTML) + 1;
+  
+  var url = base + "/image/like";
+  var data = {
+    id: id,
+    content: ''
+  };
+  
+  http7.open("POST", url);
+  http7.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http7.send(JSON.stringify(data))
+}
+
+http7.onreadystatechange = function() {
+  if (this.readyState !== 4) {
+    return
+  }
+  
+  document.getElementById('removeLike' + index).style.display = 'inline';
+};
+
+var http8 = new XMLHttpRequest();
+
+function unlikeImage(id) {
+  document.getElementById('removeLike').style.display = 'none';
+  document.getElementById('likes').textContent = parseInt(document.getElementById('likes').innerHTML) - 1;
+  
+  var url = base + "/image/like";
+  var data = {
+    id: id,
+    content: ''
+  };
+  
+  http8.open("POST", url);
+  http8.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http8.send(JSON.stringify(data))
+}
+
+http8.onreadystatechange = function() {
+  if (this.readyState !== 4) {
+    return
+  }
+  
+  document.getElementById('addLike' + index).style.display = 'inline';
+};
+
+var http9 = new XMLHttpRequest();
+
+function getCommentsOfImage(id) {
+  document.getElementById('getComments').style.display = 'none';
+  document.getElementById('commentsImage').style.display = 'inline';
+  
+  var url = base + "/image/get";
+  var data = {
+    id: id,
+    content: ''
+  };
+  
+  http9.open("POST", url);
+  http9.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http9.send(JSON.stringify(data))
+}
+
+http9.onreadystatechange = function() {
+  if (this.readyState !== 4) {
+    return
+  }
+  
+  var response = JSON.parse(this.responseText);
+  var taskList = "";
+  
+  for (var i = 0; i < response.length; i++) {
+    var string = '<h4>' + response[i].creator + ' <small>' + response[i].timestamp + '</small></h4>' +
+      '<p>' + response[i].content + '</p>';
+    
+    taskList += string;
+  }
+  
+  document.getElementById("showComments").innerHTML = taskList;
+  document.getElementById("comment").value = ""
+};
+
+function createCommentForImage(id) {
+  document.getElementById('getComments').style.display = 'none';
+  
+  var url = base + "/image";
+  var data = {
+    id: id,
+    content: document.getElementById("comment").value
+  };
+  
+  http9.open("POST", url);
+  http9.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  http9.send(JSON.stringify(data))
+}

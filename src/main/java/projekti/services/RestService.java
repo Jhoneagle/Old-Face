@@ -7,10 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import projekti.domain.entities.Account;
-import projekti.domain.entities.Friend;
-import projekti.domain.entities.Reaction;
-import projekti.domain.entities.StatusUpdate;
+import projekti.domain.entities.*;
 import projekti.domain.json.FriendJson;
 import projekti.domain.json.ReactionJson;
 import projekti.domain.models.CommentModel;
@@ -144,6 +141,59 @@ public class RestService {
         if (exist == null) {
             Reaction result = new Reaction();
             result.setStatusUpdate(post);
+            result.setTimestamp(LocalDateTime.now());
+            result.setStatus((long) 0);
+            result.setWho(user);
+
+            this.reactionRepository.save(result);
+        } else {
+            this.reactionRepository.delete(exist);
+        }
+    }
+
+    public Image getImageById(Long id) {
+        return this.imageRepository.getOne(id);
+    }
+
+    public List<CommentModel> getCommentsOfImage(ReactionJson reactionJson) {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("timestamp").descending());
+        Image post = this.imageRepository.getOne(reactionJson.getId());
+        List<Reaction> all = this.reactionRepository.findAllByImageAndStatus(post, (long) 1, pageable);
+
+        return createModelList(all);
+    }
+
+    public List<CommentModel> createCommentForImage(ReactionJson reactionJson) {
+        Image post = this.imageRepository.getOne(reactionJson.getId());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Pageable pageable = PageRequest.of(0, 9, Sort.by("timestamp").descending());
+        List<Reaction> all = this.reactionRepository.findAllByImageAndStatus(post, (long) 1, pageable);
+        Account user = this.accountRepository.findByUsername(auth.getName());
+
+        Reaction result = new Reaction();
+        result.setContent(reactionJson.getContent());
+        result.setImage(post);
+        result.setTimestamp(LocalDateTime.now());
+        result.setStatus((long) 1);
+        result.setWho(user);
+
+        this.reactionRepository.save(result);
+        all.add(0, result);
+
+        return createModelList(all);
+    }
+
+    public void addLikeToImage(ReactionJson reactionJson) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Account user = this.accountRepository.findByUsername(auth.getName());
+
+        Image post = this.imageRepository.getOne(reactionJson.getId());
+
+        Reaction exist = this.reactionRepository.findByImageAndStatusAndWho(post, (long) 0, user);
+
+        if (exist == null) {
+            Reaction result = new Reaction();
+            result.setImage(post);
             result.setTimestamp(LocalDateTime.now());
             result.setStatus((long) 0);
             result.setWho(user);

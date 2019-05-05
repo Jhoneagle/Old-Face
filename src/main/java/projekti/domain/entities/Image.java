@@ -22,6 +22,7 @@ public class Image extends AbstractPersistable<Long> {
     private String description;
     private String filename;
     private String contentType;
+    private Long contentLength;
     private LocalDateTime timestamp;
 
     @Lob

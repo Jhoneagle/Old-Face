@@ -1,8 +1,7 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{fragments/layout}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout}">
     <head>
-        <title>Home</title>
+        <title>Friends</title>
     </head>
     <body>
         <div layout:fragment="content" class="container">
@@ -11,10 +10,10 @@
                     <div class="col-sm-3 well">
                         <div class="well">
                             <p th:text="${profileName}">name of owner</p>
-                            <div th:if="${pictures.get(profileName)}">
-                                <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                            <div th:if="${profilePicture}">
+                                <img th:src="@{/old-face/api/files/{id}(id=${profilePicture.id})}" class="img-circle" height="65" width="65" alt="Avatar">
                             </div>
-                            <div th:unless="${pictures.get(profileName)}">
+                            <div th:unless="${profilePicture}">
                                 <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">
                             </div>
                         </div>
@@ -27,7 +26,7 @@
                             <div class="col-sm-4">
                                 <div class="well">
                                     <div th:if="${pictures.get(person.nickname)}">
-                                        <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                                        <img th:src="@{/old-face/api/files/{id}(id=${pictures.get(person.nickname).id})}" class="img-circle" height="65" width="65" alt="Avatar">
                                     </div>
                                     <div th:unless="${pictures.get(person.nickname)}">
                                         <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">

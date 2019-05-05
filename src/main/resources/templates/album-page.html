@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{fragments/layout}">
+      xmlns:sec="http://www.w3.org/1999/xhtml" layout:decorate="~{fragments/layout}">
     <head>
-        <title>Home</title>
+        <title>Album</title>
     </head>
     <body>
         <div layout:fragment="content" class="container">
@@ -11,14 +11,126 @@
                     <div class="col-sm-3 well">
                         <div class="well">
                             <p th:text="${profileName}">name of owner</p>
-                            <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                            <div th:if="${profilePicture}">
+                                <img th:src="@{/old-face/api/files/{id}(id=${profilePicture.id})}" class="img-circle" height="65" width="65" alt="Avatar">
+                            </div>
+                            <div th:unless="${profilePicture}">
+                                <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">
+                            </div>
                         </div>
                         <p><a th:href="'/old-face/' + ${whoseWall}">Wall</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/friends'">Friends</a></p>
                         <p><a th:href="'/old-face/' + ${whoseWall} + '/album'">Album</a></p>
                     </div>
                     <div class="col-sm-9">
+                        <div class="row">
+                            <div sec:authorize="hasPermission('albumOwner', #request.getAttribute('whoseWall'))">
+                                <form th:action="@{/old-face/{path}/album/image(path=${whoseWall})}" method="post" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <input type="text"
+                                               id="content"
+                                               name="content"
+                                               class="form-control"
+                                               autofocus="autofocus"
+                                               placeholder="Description" />
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file"
+                                               id="file"
+                                               name="file"
+                                               class="form-control" />
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-sm-6 col-sm-offset-3">
+                                                <input type="submit"
+                                                       name="add-submit"
+                                                       id="add-submit"
+                                                       class="form-control btn btn-info"
+                                                       value="Post">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div th:if="${previous}" class="col-sm-4 well">
+                                <img th:src="@{/old-face/api/files/{id}(id=${previous.id})}" alt="image" class="img-thumbnail">
+                                <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${previous.id}, nickname=${whoseWall})}">previous</a>
+                            </div>
 
+                            <div th:if="${current}" class="col-sm-4 well">
+                                <div class="row">
+                                    <img th:src="@{/old-face/api/files/{id}(id=${current.id})}" alt="image" class="img-fluid">
+                                    <p th:text="${current.description}">
+                                </div>
+                                <div class="row">
+                                    <div class="row well">
+                                        <span th:id="'likes'" th:text="${current.likes}">likes</span>
+                                        <div th:if="${current.likedAlready}">
+                                            <button type="button" class="btn btn-success" th:id="'addLike'"
+                                                    th:attr="onclick=|likeImage('${current.id}')|"
+                                                    style="display: none;"
+                                                    sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                                Like
+                                            </button>
+                                            <button type="button" class="btn btn-danger" th:id="'removeLike'"
+                                                    th:attr="onclick=|unlikeImage('${current.id}')|"
+                                                    style="display:inline"
+                                                    sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                                Unlike
+                                            </button>
+                                        </div>
+                                        <div th:unless="${current.likedAlready}">
+                                            <button type="button" class="btn btn-success" th:id="'addLike'"
+                                                    th:attr="onclick=|likeImage('${current.id}')|"
+                                                    style="display: inline;"
+                                                    sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                                Like
+                                            </button>
+                                            <button type="button" class="btn btn-danger" th:id="'removeLike'"
+                                                    th:attr="onclick=|unlikeImage('${current.id}')|"
+                                                    style="display:none"
+                                                    sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                                Unlike
+                                            </button>
+                                        </div>
+                                        <button type="button" class="btn btn-success" th:id="'getComments'"
+                                                th:attr="onclick=|getCommentsOfImage('${current.id}')|">
+                                            Show comments
+                                        </button>
+                                    </div>
+                                    <div class="row" th:id="'commentsImage'" style="display: none">
+                                        <h4 sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
+                                        <input type="text" id="comment" name="comment" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))" />
+                                        <button class="btn btn-success" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))"
+                                                th:attr="onclick=|createCommentForImage('${current.id}')|">Send</button>
+
+                                        <p>Comments:</p>
+                                        <div id="showComments"></div>
+                                    </div>
+                                    <div class="row" sec:authorize="hasPermission('owner', #request.getAttribute('whoseWall'))">
+                                        <form th:action="@{/old-face/{nickname}/album/{imageId}/del(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
+                                            <input type="submit" value="Delete"/>
+                                        </form>
+                                        <form th:action="@{/old-face/{nickname}/album/{imageId}/set(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
+                                            <input type="submit" value="Set as profile picture"/>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${next}" class="col-sm-4 well">
+                                <img th:src="@{/old-face/api/files/{id}(id=${next.id})}" alt="image" class="img-thumbnail">
+                                <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${next.id}, nickname=${whoseWall})}">next</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 well" th:each="image : ${album}">
+                                <img th:src="@{/old-face/api/files/{id}(id=${image.id})}" alt="image" class="img-thumbnail">
+                                <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${image.id}, nickname=${whoseWall})}">go</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-package projekti.domain.models;
+package projekti.domain.models.validation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

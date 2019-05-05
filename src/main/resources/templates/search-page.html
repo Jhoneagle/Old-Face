@@ -10,7 +10,7 @@
                     <div class="col-sm-4">
                         <div class="well">
                             <div th:if="${pictures.get(person.nickname)}">
-                                <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                                <img th:src="@{/old-face/api/files/{id}(id=${pictures.get(person.nickname).id})}" class="img-circle" height="65" width="65" alt="Avatar">
                             </div>
                             <div th:unless="${pictures.get(person.nickname)}">
                                 <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">

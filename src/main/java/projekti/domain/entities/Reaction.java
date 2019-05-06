@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
+/**
+ * Database table for all the reactions people create when they go through others posts and images.
+ */
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -23,9 +26,11 @@ public class Reaction extends AbstractPersistable<Long> {
     @ManyToOne
     private Account who;
 
+    // Applied if reaction is done to image.
     @ManyToOne
     private Image image;
 
+    // Applied if reaction is done to post.
     @ManyToOne
     private StatusUpdate statusUpdate;
 }

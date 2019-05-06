@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Database image table. Contains all the images in the application that users are posting.
+ */
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -21,11 +24,14 @@ public class Image extends AbstractPersistable<Long> {
     private Long status;
     private String name;
     private String description;
+    private LocalDateTime timestamp;
+
+    // Image headers.
     private String filename;
     private String contentType;
     private Long contentLength;
-    private LocalDateTime timestamp;
 
+    // Actual image or well more like its digital representation.
     @Lob
     @Type(type = "org.hibernate.type.ImageType")
     private byte[] content;
@@ -33,9 +39,11 @@ public class Image extends AbstractPersistable<Long> {
     @ManyToOne
     private Account owner;
 
+    // NOT YET IMPLEMENTED!!!
     @OneToOne
     private StatusUpdate update;
 
+    // Reactions related to this image.
     @OneToMany(mappedBy = "image")
     private List<Reaction> reactions = new ArrayList<>();
 }

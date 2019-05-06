@@ -31,6 +31,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Main service class which contains methods that handle all the logic that is needed after person is authenticated.
+ * Except those that are done through REST API endpoints. As they have own service class.
+ *
+ * @see RestService
+ * @see projekti.controllers.AccountRelatedController
+ */
 @Service
 public class MainService {
     @Autowired
@@ -45,29 +52,75 @@ public class MainService {
     @Autowired
     private ReactionRepository reactionRepository;
 
+    /**
+     * Finds users account by his username.
+     *
+     * @param username username of account.
+     *
+     * @return account found.
+     */
     public Account findByUsername(String username) {
         return this.accountRepository.findByUsername(username);
     }
 
+    /**
+     * Finds users account by his nickname.
+     *
+     * @param nickname nickname of account.
+     *
+     * @return account found.
+     */
     public Account findByNickname(String nickname) {
         return this.accountRepository.findByNickname(nickname);
     }
 
+    /**
+     * Get needed profile pictures of the accounts.
+     * Gives map where key is accounts nickname and value is image model which is reformat version of image from database.
+     *
+     * @param accounts list of accounts that need their profile picture.
+     *
+     * @return map of string - image model pair.
+     */
     public Map<String, ImageModel> getAccountsProfilePictures(List<Account> accounts) {
         List<Image> raw = this.imageRepository.findAllByStatusAndOwnerIn(1L, accounts);
         return raw.stream().collect(Collectors.toMap(image -> image.getOwner().getNickname(), this::formImageModel, (a, b) -> b));
     }
 
+    /**
+     * Get needed profile pictures of the accounts that are parsed from found persons in a search.
+     * Gives map where key is accounts nickname and value is image model which is reformat version of image from database.
+     *
+     * @param searchresult list of persons found in search that need their profile picture.
+     *
+     * @return map of string - image model pair.
+     */
     public Map<String, ImageModel> getProfilePicturesForSearch(List<SearchResult> searchresult) {
         List<String> nicknames = searchresult.stream().map(SearchResult::getNickname).collect(Collectors.toList());
         return getAccountsProfilePictures(this.accountRepository.findAllByNicknameIn(nicknames));
     }
 
-    public Map<String, ImageModel> getFriendProfilePictures(List<FriendModel> searchresult) {
-        List<String> nicknames = searchresult.stream().map(FriendModel::getNickname).collect(Collectors.toList());
+    /**
+     * Get needed profile pictures of the accounts that are parsed from found persons in a search.
+     * Gives map where key is accounts nickname and value is image model which is reformat version of image from database.
+     *
+     * @param friendModelList list of friendships of persons that need their profile picture.
+     *
+     * @return map of string - image model pair.
+     */
+    public Map<String, ImageModel> getFriendProfilePictures(List<FriendModel> friendModelList) {
+        List<String> nicknames = friendModelList.stream().map(FriendModel::getNickname).collect(Collectors.toList());
         return getAccountsProfilePictures(this.accountRepository.findAllByNicknameIn(nicknames));
     }
 
+    /**
+     * Gives list of posts in the wall of the person whose nickname the parameter is.
+     * And between returning the list and database select call reformats the database entities into more secure model format.
+     *
+     * @param nickname nickname of the user whose posts in the wall needed.
+     *
+     * @return list of posts in the wall.
+     */
     public List<WallPost> getPosts(String nickname) {
         Pageable pageable = PageRequest.of(0, 25, Sort.by("timestamp").descending());
         List<StatusUpdate> allByTo = this.statusUpdateRepository.findAllByTo(this.accountRepository.findByNickname(nickname), pageable);
@@ -93,11 +146,24 @@ public class MainService {
         return result;
     }
 
+    /**
+     * Extract all accounts from wall posts who have created them.
+     *
+     * @param posts posts in the wall.
+     *
+     * @return list of people who made post into the specific wall.
+     */
     public List<Account> extractPeopleFromPosts(List<WallPost> posts) {
         List<String> nicknames = posts.stream().map(WallPost::getNickname).collect(Collectors.toList());
         return this.accountRepository.findAllByNicknameIn(nicknames);
     }
 
+    /**
+     * Creates new post into the wall defined by nickname.
+     *
+     * @param statusPostModel forms validator object.
+     * @param nickname nickname of the person whose wall post is created.
+     */
     public void createPost(StatusPostModel statusPostModel, String nickname) {
         StatusUpdate post = new StatusUpdate();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -110,10 +176,19 @@ public class MainService {
         this.statusUpdateRepository.save(post);
     }
 
+    /**
+     * Looks for people whose first and/or last name contains the text given and
+     * returns a list of those found ones in more useful and safer form.
+     *
+     * @param search user typing
+     *
+     * @return list of models that contain found people.
+     */
     public List<SearchResult> findPeopleWithParam(String search) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account user = findByUsername(auth.getName());
 
+        // Parse the parameter in the actual parameter and get the result as raw data from database.
         String[] parts = search.split(" ");
         List<SearchResult> result = new ArrayList<>();
         List<Account> filtered;
@@ -132,6 +207,7 @@ public class MainService {
             filtered = this.accountRepository.findAllByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name);
         }
 
+        // Reformat the raw data into better format.
         for (Account found : filtered) {
             SearchResult model = new SearchResult();
             model.setNickname(found.getNickname());
@@ -163,47 +239,57 @@ public class MainService {
         return result;
     }
 
+    /**
+     * Get all the friend requests what user has gotten.
+     *
+     * @return list of persons that have asked to be friend with the user itself.
+     */
     public List<FriendModel> getFriendRequests() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account user = findByUsername(auth.getName());
-        List<FriendModel> requests = new ArrayList<>();
-
-        user.getReceiverFriends().stream().filter(a -> a.getStatus() == 0).forEach(a -> {
-            FriendModel pal = new FriendModel();
-            pal.setTimestamp(a.getTimestamp());
-            pal.setNickname(a.getSender().getNickname());
-            pal.setName(a.getSender().getFirstName() + " " + a.getSender().getLastName());
-
-            requests.add(pal);
-        });
-
-        return requests;
+        return user.getReceiverFriends().stream().filter(a -> a.getStatus() == 0).map(a -> getFriendModel(a, a.getSender())).collect(Collectors.toList());
     }
 
+    /**
+     * Reformats database objects into secured versions that contains only needed info.
+     * Account parameter is the who friend request was 'asked by us' or who asked 'us'.
+     *
+     * @param a friendship of the users.
+     * @param notUserItself user who isn't the one asking friendships.
+     *
+     * @return reformat object to make database more saver.
+     */
+    private FriendModel getFriendModel(Friend a, Account notUserItself) {
+        FriendModel pal = new FriendModel();
+        pal.setTimestamp(a.getTimestamp());
+        pal.setNickname(notUserItself.getNickname());
+        pal.setName(notUserItself.getFirstName() + " " + notUserItself.getLastName());
+        return pal;
+    }
+
+    /**
+     * Get all friends of the person.
+     *
+     * @param person account whose friends needed.
+     *
+     * @return list of accounts who are friends with the account given as parameter.
+     */
     public List<FriendModel> getFriends(Account person) {
-        List<FriendModel> friends = new ArrayList<>();
+        List<FriendModel> friends = person.getReceiverFriends().stream().filter(a -> a.getStatus() > 0)
+                .map(a -> getFriendModel(a, a.getSender())).collect(Collectors.toList());
 
-        person.getReceiverFriends().stream().filter(a -> a.getStatus() > 0).forEach(a -> {
-            FriendModel pal = new FriendModel();
-            pal.setTimestamp(a.getTimestamp());
-            pal.setNickname(a.getSender().getNickname());
-            pal.setName(a.getSender().getFirstName() + " " + a.getSender().getLastName());
-
-            friends.add(pal);
-        });
-
-        person.getSentFriends().stream().filter(a -> a.getStatus() > 0).forEach(a -> {
-            FriendModel pal = new FriendModel();
-            pal.setTimestamp(a.getTimestamp());
-            pal.setNickname(a.getReceiver().getNickname());
-            pal.setName(a.getReceiver().getFirstName() + " " + a.getReceiver().getLastName());
-
-            friends.add(pal);
-        });
+        person.getSentFriends().stream().filter(a -> a.getStatus() > 0)
+                .map(a -> getFriendModel(a, a.getReceiver())).forEach(friends::add);
 
         return friends;
     }
 
+    /**
+     * Save image to database.
+     *
+     * @param file image file.
+     * @param description content that is included to images data.
+     */
     public void saveImage(MultipartFile file, String description) {
         Image image = new Image();
 
@@ -227,6 +313,11 @@ public class MainService {
         this.imageRepository.save(image);
     }
 
+    /**
+     * Set wanted image as profile picture and before that update the old possible profile picture to not be profile picture.
+     *
+     * @param imageId id of the image.
+     */
     public void setAsProfilePicture(Long imageId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Image image = this.imageRepository.findByOwnerAndStatus(findByUsername(auth.getName()), (long) 1);
@@ -241,11 +332,25 @@ public class MainService {
         this.imageRepository.save(one);
     }
 
+    /**
+     * get specific picture.
+     *
+     * @param imageId id of the image.
+     *
+     * @return image object from database that was asked.
+     */
     public ImageModel getCurrentPicture(Long imageId) {
         Image one = this.imageRepository.getOne(imageId);
         return formImageModel(one);
     }
 
+    /**
+     * reformats image gotten from database to more ideal form so that no unwanted info is leaked to anyone.
+     *
+     * @param one image gotten from database.
+     *
+     * @return its reformat version as model.
+     */
     private ImageModel formImageModel(Image one) {
         if (one == null) {
             return null;
@@ -267,16 +372,35 @@ public class MainService {
         return model;
     }
 
+    /**
+     * Returns users profile picture.
+     *
+     * @param nickname nickname of the user whose profile picture is needed.
+     *
+     * @return profile picture of user.
+     */
     public ImageModel getWallsProfilePicture(String nickname) {
         Image image = this.imageRepository.findByOwnerAndStatus(findByNickname(nickname), (long) 1);
         return formImageModel(image);
     }
 
+    /**
+     * Returns all the images in the album of the specific user.
+     *
+     * @param nickname nickname of the user whose album is needed.
+     *
+     * @return lsit of images.
+     */
     public List<ImageModel> getPicturesInAlbum(String nickname) {
         List<Image> images = this.imageRepository.findAllByOwner(findByNickname(nickname));
         return images.stream().map(this::formImageModel).collect(Collectors.toList());
     }
 
+    /**
+     * Deletes specified image and all reactions related to it.
+     *
+     * @param imageId id of the image.
+     */
     @Transactional
     public void deletePicture(Long imageId) {
         Image one = this.imageRepository.getOne(imageId);
@@ -284,6 +408,14 @@ public class MainService {
         this.imageRepository.delete(one);
     }
 
+    /**
+     * Tells if picture have another one before and/or after it and returns their model.
+     *
+     * @param nickname nickname of the user whose album is looked.
+     * @param imageId id of the image currently selected.
+     *
+     * @return one or two image models.
+     */
     public List<ImageModel> picturesAround(String nickname, Long imageId) {
         List<Image> images = this.imageRepository.findAllByOwner(findByNickname(nickname));
         List<ImageModel> list = new ArrayList<>();

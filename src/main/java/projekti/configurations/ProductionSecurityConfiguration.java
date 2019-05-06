@@ -17,6 +17,9 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import projekti.utils.security.CustomPermissionEvaluator;
 
+/**
+ * Security configurations for production environment.
+ */
 @Profile("production")
 @Configuration
 @EnableWebSecurity
@@ -28,6 +31,10 @@ public class ProductionSecurityConfiguration extends WebSecurityConfigurerAdapte
     @Autowired
     private CustomPermissionEvaluator customPermissionEvaluator;
 
+    /**
+     * Customizes spring securities login system by applying custom login and redirect after login path, logout protocols and redirect path after logout.
+     * Also disables csrf because it kills javascript calls to rest controller in heroku.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
@@ -54,18 +61,27 @@ public class ProductionSecurityConfiguration extends WebSecurityConfigurerAdapte
                 .permitAll();
     }
 
+    /**
+     * configures custom user details service.
+     *
+     * @see projekti.services.CustomUserDetailsService
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
+    /**
+     * Applies custom permission evaluator so that it can be access in thymeleaf template instead of springs default one.
+     *
+     * @see CustomPermissionEvaluator
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
         DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
         handler.setPermissionEvaluator(customPermissionEvaluator);
         web.expressionHandler(handler);
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

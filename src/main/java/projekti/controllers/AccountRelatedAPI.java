@@ -14,10 +14,15 @@ import projekti.services.RestService;
 
 import java.util.List;
 
+/**
+ * Controller to handle routes that only work as API endpoints for apps data.
+ */
 @RestController
 public class AccountRelatedAPI {
     @Autowired
     private RestService restService;
+
+    // Handlers for friend requests
 
     @PostMapping("/old-face/api/ask")
     public FriendJson askToBeFriend(@RequestBody FriendJson friendJson) {
@@ -37,6 +42,8 @@ public class AccountRelatedAPI {
         return friendJson;
     }
 
+    // Status post reactions
+
     @PostMapping("/old-face/api/post")
     public List<CommentModel> createCommentForPost(@RequestBody ReactionJson reactionJson) {
         return this.restService.createCommentForPost(reactionJson);
@@ -53,6 +60,13 @@ public class AccountRelatedAPI {
         return this.restService.getCommentsOfPost(reactionJson);
     }
 
+    /**
+     * Used to show images in the application without taking their byte arrays into template.
+     * Can be used through image tags src attribute as if this was actual image file when in fact its gotten from database.
+     *
+     * @param id id of the image to be shown.
+     * @return Content of the image.
+     */
     @GetMapping("/old-face/api/files/{id}")
     public ResponseEntity<byte[]> viewImage(@PathVariable Long id) {
         Image image = this.restService.getImageById(id);
@@ -64,6 +78,8 @@ public class AccountRelatedAPI {
 
         return new ResponseEntity<>(image.getContent(), headers, HttpStatus.CREATED);
     }
+
+    // Image reactions
 
     @PostMapping("/old-face/api/image")
     public List<CommentModel> createCommentForImage(@RequestBody ReactionJson reactionJson) {

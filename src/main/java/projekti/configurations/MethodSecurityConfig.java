@@ -8,12 +8,20 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import projekti.utils.security.CustomPermissionEvaluator;
 
+/**
+ * Enables global method level security checks to make sure person is logged in and also authorized to do what his planning to.
+ */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
     @Autowired
     private CustomPermissionEvaluator customPermissionEvaluator;
 
+    /**
+     * Enables custom permission evaluation in the security checks.
+     *
+     * @see CustomPermissionEvaluator
+     */
     @Override
     protected MethodSecurityExpressionHandler createExpressionHandler() {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();

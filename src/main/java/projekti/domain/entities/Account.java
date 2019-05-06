@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Database User table. Containing all the info of the users.
+ */
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -32,32 +35,43 @@ public class Account extends AbstractPersistable<Long> {
     private String email;
     private LocalDate born;
 
+    // (account - status update - account) connection.
     @OneToMany(mappedBy = "creator")
     private List<StatusUpdate> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "to")
     private List<StatusUpdate> wall = new ArrayList<>();
 
+    // (account - friendship - account) connection.
     @OneToMany(mappedBy = "receiver")
     private List<Friend> receiverFriends = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender")
     private List<Friend> sentFriends = new ArrayList<>();
 
+    // Images the account has added.
     @OneToMany(mappedBy = "owner")
     private List<Image> images = new ArrayList<>();
 
+    // Reactions account has made to posts and images.
     @OneToMany(mappedBy = "who")
     private List<Reaction> reactions = new ArrayList<>();
 
+    // Authorities account has.
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> authorities = new ArrayList<>();
 
+    /**
+     * Custom simplified tostring to prevent infinite loop because of the friendship and status update double users.
+      */
     @Override
     public String toString() {
         return username;
     }
 
+    /**
+     * Simplified way to get users full name without having it as one field still.
+     */
     public String getFullName() {
         return firstName + " " + lastName;
     }

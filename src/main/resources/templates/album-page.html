@@ -68,31 +68,27 @@
                                 <div class="row">
                                     <div class="row well">
                                         <span th:id="'likes'" th:text="${current.likes}">likes</span>
-                                        <div th:if="${current.likedAlready}">
+                                        <div th:if="${current.likedAlready}" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
                                             <button type="button" class="btn btn-success" th:id="'addLike'"
                                                     th:attr="onclick=|likeImage('${current.id}')|"
-                                                    style="display: none;"
-                                                    sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                                    style="display: none;">
                                                 Like
                                             </button>
                                             <button type="button" class="btn btn-danger" th:id="'removeLike'"
                                                     th:attr="onclick=|unlikeImage('${current.id}')|"
-                                                    style="display:inline"
-                                                    sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                                    style="display: inline">
                                                 Unlike
                                             </button>
                                         </div>
-                                        <div th:unless="${current.likedAlready}">
+                                        <div th:unless="${current.likedAlready}" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
                                             <button type="button" class="btn btn-success" th:id="'addLike'"
                                                     th:attr="onclick=|likeImage('${current.id}')|"
-                                                    style="display: inline;"
-                                                    sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                                    style="display: inline;">
                                                 Like
                                             </button>
                                             <button type="button" class="btn btn-danger" th:id="'removeLike'"
                                                     th:attr="onclick=|unlikeImage('${current.id}')|"
-                                                    style="display:none"
-                                                    sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                                    style="display: none">
                                                 Unlike
                                             </button>
                                         </div>

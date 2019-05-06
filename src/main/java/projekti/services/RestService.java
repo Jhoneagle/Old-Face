@@ -18,6 +18,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service class to contain all the logic what REST API controller needs.
+ *
+ * @see projekti.controllers.AccountRelatedAPI
+ */
 @Service
 public class RestService {
     @Autowired
@@ -35,6 +40,11 @@ public class RestService {
     @Autowired
     private ImageRepository imageRepository;
 
+    /**
+     * creates bending request to be friends.
+     *
+     * @param friendJson JSON object gotten with API call.
+     */
     public void createFriendRequest(FriendJson friendJson) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account sender = this.accountRepository.findByUsername(auth.getName());
@@ -54,6 +64,11 @@ public class RestService {
         }
     }
 
+    /**
+     * Cancels the request that has been created earlier but not yet accepted by the receiver.
+     *
+     * @param friendJson JSON object gotten with API call.
+     */
     public void cancelRequest(FriendJson friendJson) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account sender = this.accountRepository.findByUsername(auth.getName());
@@ -69,6 +84,11 @@ public class RestService {
         }
     }
 
+    /**
+     * Handle the friend request gotten from someone.
+     *
+     * @param friendJson JSON object gotten with API call.
+     */
     public void handleRequest(FriendJson friendJson) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account receiver = this.accountRepository.findByUsername(auth.getName());
@@ -85,6 +105,13 @@ public class RestService {
         this.friendRepository.save(friend);
     }
 
+    /**
+     * Get all the comments of the post which id is given in the JSON.
+     *
+     * @param reactionJson JSON object gotten with API call.
+     *
+     * @return list of comments that have been given for the specific post.
+     */
     public List<CommentModel> getCommentsOfPost(ReactionJson reactionJson) {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("timestamp").descending());
         StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
@@ -93,6 +120,13 @@ public class RestService {
         return createModelList(all);
     }
 
+    /**
+     *  Adds new comment for the post which id is in the JSON.
+     *
+     * @param reactionJson JSON object gotten with API call.
+     *
+     * @return list of comments that have been given for the specific post after adding new comment.
+     */
     public List<CommentModel> createCommentForPost(ReactionJson reactionJson) {
         StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -113,6 +147,13 @@ public class RestService {
         return createModelList(all);
     }
 
+    /**
+     * Reformats the list of comments in the more secure form.
+     *
+     * @param all comments to be reformat.
+     *
+     * @return reformated list of the same comments.
+     */
     private List<CommentModel> createModelList(List<Reaction> all) {
         List<CommentModel> result = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
@@ -130,6 +171,11 @@ public class RestService {
         return result;
     }
 
+    /**
+     * Adds a like to the post.
+     *
+     * @param reactionJson JSON object gotten with API call.
+     */
     public void addLikeToPost(ReactionJson reactionJson) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account user = this.accountRepository.findByUsername(auth.getName());
@@ -151,10 +197,24 @@ public class RestService {
         }
     }
 
+    /**
+     * Finds image by its id.
+     *
+     * @param id id of an image.
+     *
+     * @return image that represents the id.
+     */
     public Image getImageById(Long id) {
         return this.imageRepository.getOne(id);
     }
 
+    /**
+     * Get all the comments of the image which id is given in the JSON.
+     *
+     * @param reactionJson JSON object gotten with API call.
+     *
+     * @return list of comments that have been given for the specific post.
+     */
     public List<CommentModel> getCommentsOfImage(ReactionJson reactionJson) {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("timestamp").descending());
         Image post = this.imageRepository.getOne(reactionJson.getId());
@@ -163,6 +223,13 @@ public class RestService {
         return createModelList(all);
     }
 
+    /**
+     *  Adds new comment for the image which id is in the JSON.
+     *
+     * @param reactionJson JSON object gotten with API call.
+     *
+     * @return list of comments that have been given for the specific post after adding new comment.
+     */
     public List<CommentModel> createCommentForImage(ReactionJson reactionJson) {
         Image post = this.imageRepository.getOne(reactionJson.getId());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -183,6 +250,11 @@ public class RestService {
         return createModelList(all);
     }
 
+    /**
+     * Adds a like to the image.
+     *
+     * @param reactionJson JSON object gotten with API call.
+     */
     public void addLikeToImage(ReactionJson reactionJson) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account user = this.accountRepository.findByUsername(auth.getName());

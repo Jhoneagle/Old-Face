@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Database table for the post people can make into their own and their friends walls.
+ */
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -23,6 +26,8 @@ public class StatusUpdate extends AbstractPersistable<Long> {
     private String content;
     private LocalDateTime timestamp;
 
+    // Possibility to connect image into post.
+    // NOT YET IMPLEMENTED!!!
     @OneToOne
     private Image image;
 
@@ -32,9 +37,15 @@ public class StatusUpdate extends AbstractPersistable<Long> {
     @ManyToOne
     private Account to;
 
+    // Reactions related to this post.
     @OneToMany(mappedBy = "statusUpdate")
     private List<Reaction> reactions = new ArrayList<>();
 
+    /**
+     * Check Account table for this.
+     *
+     * @see Account#toString()
+     */
     @Override
     public String toString() {
         return content;

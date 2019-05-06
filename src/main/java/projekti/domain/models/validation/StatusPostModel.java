@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * Validation object for wall posts form.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

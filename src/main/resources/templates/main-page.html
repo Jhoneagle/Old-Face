@@ -60,7 +60,9 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="well">
-                                        <p th:text="${post.fullname}"> creator </p>
+                                        <a th:href="'/old-face/' + ${post.nickname}">
+                                            <p th:text="${post.fullname}"> creator </p>
+                                        </a>
                                         <div th:if="${pictures.get(post.nickname)}">
                                             <img th:src="@{/old-face/api/files/{id}(id=${pictures.get(post.nickname).id})}" class="img-circle" height="65" width="65" alt="Avatar">
                                         </div>

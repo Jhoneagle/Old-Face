@@ -24,21 +24,21 @@
                                     <span th:text="${person.name}"> creator </span>
                                 </a>
 
-                                <div th:if="${person.notAsked}" th:id="${iStat.index} + 'button'">
+                                <div th:if="${person.notAsked}">
                                     <button th:id="'ask'+ ${person.nickname}" type="button" class="btn btn-success"
                                             th:attr="onclick=|askToBeFriend('${person.nickname}', '${iStat.index}')|">Ask</button>
+                                    <button th:id="'cancel'+ ${person.nickname}" type="button" class="btn btn-danger"
+                                            th:attr="onclick=|cancel('${person.nickname}', '${iStat.index}')|"
+                                            style="display: none">Cancel</button>
                                 </div>
-                                <div th:unless="${person.notAsked}" th:id="${iStat.index}">
+                                <div th:unless="${person.notAsked}">
                                     <div th:if="${person.request} and not ${person.bending}" th:id="${iStat.index} + 'button'">
-                                        <button th:id="'cancel'+ ${person.nickname}" type="button" class="btn btn-success"
+                                        <button th:id="'cancel'+ ${person.nickname}" type="button" class="btn btn-danger"
                                                 th:attr="onclick=|cancel('${person.nickname}', '${iStat.index}')|">Cancel</button>
+                                        <button th:id="'ask'+ ${person.nickname}" type="button" class="btn btn-success"
+                                                th:attr="onclick=|askToBeFriend('${person.nickname}', '${iStat.index}')|"
+                                                style="display: none">Ask</button>
                                     </div>
-                                </div>
-                                <div id="alternative" style="display: none;">
-                                    <p>Success</p>
-                                </div>
-                                <div id="canceled" style="display: none;">
-                                    <p>Cancel</p>
                                 </div>
                             </div>
                         </div>

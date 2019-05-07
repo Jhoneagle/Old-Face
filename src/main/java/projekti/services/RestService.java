@@ -63,6 +63,22 @@ public class RestService {
             friend.setReceiver(receiver);
 
             this.friendRepository.save(friend);
+        } else {
+            if (exist != null && exist.getFriendshipState() == FriendshipState.DECLINED) {
+                exist.setFriendshipState(FriendshipState.PENDING);
+                exist.setTimestamp(LocalDateTime.now());
+                exist.setSender(sender);
+                exist.setReceiver(receiver);
+
+                this.friendRepository.save(exist);
+            } else if (exist2 != null && exist2.getFriendshipState() == FriendshipState.DECLINED) {
+                exist2.setFriendshipState(FriendshipState.PENDING);
+                exist2.setTimestamp(LocalDateTime.now());
+                exist2.setSender(sender);
+                exist2.setReceiver(receiver);
+
+                this.friendRepository.save(exist2);
+            }
         }
     }
 

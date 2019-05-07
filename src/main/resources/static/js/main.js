@@ -3,7 +3,8 @@ var base = contextRoot + "old-face/api";
 var http = new XMLHttpRequest();
 
 function askToBeFriend(nickname, index) {
-  document.getElementById(index + 'button').style.display = 'none';
+  document.getElementById('ask' + nickname).style.display = 'none';
+  document.getElementById('cancel' + nickname).style.display = 'inline';
   
   var url = base + "/ask";
   var data = {
@@ -20,14 +21,13 @@ http.onreadystatechange = function() {
   if (this.readyState !== 4) {
     return
   }
-  
-  document.getElementById('alternative').style.display = 'inline';
 };
 
 var http2 = new XMLHttpRequest();
 
 function cancel(nickname, index) {
-  document.getElementById(index + 'button').style.display = 'none';
+  document.getElementById('cancel' + nickname).style.display = 'none';
+  document.getElementById('ask' + nickname).style.display = 'inline';
   
   var url = base + "/ask/cancel";
   var data = {
@@ -44,8 +44,6 @@ http2.onreadystatechange = function() {
   if (this.readyState !== 4) {
     return
   }
-  
-  document.getElementById('canceled').style.display = 'inline';
 };
 
 var http3 = new XMLHttpRequest();

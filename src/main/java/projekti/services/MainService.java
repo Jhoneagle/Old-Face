@@ -220,7 +220,7 @@ public class MainService {
 
             for (Friend friend : found.getReceiverFriends()) {
                 if (friend.getSender().getUsername().equals(user.getUsername())) {
-                    model.setNotAsked(false);
+                    model.setNotAsked(friend.getFriendshipState() == FriendshipState.DECLINED);
                     model.setRequest(friend.getFriendshipState() == FriendshipState.PENDING);
                     model.setBending(false);
                     break;
@@ -229,7 +229,7 @@ public class MainService {
 
             for (Friend friend : found.getSentFriends()) {
                 if (friend.getReceiver().getUsername().equals(user.getUsername())) {
-                    model.setNotAsked(false);
+                    model.setNotAsked(friend.getFriendshipState() == FriendshipState.DECLINED);
                     model.setRequest(friend.getFriendshipState() == FriendshipState.PENDING);
                     model.setBending(true);
                     break;

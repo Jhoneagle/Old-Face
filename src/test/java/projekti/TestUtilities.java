@@ -1,13 +1,15 @@
 package projekti;
 
 import projekti.domain.entities.*;
+import projekti.domain.enums.FriendshipState;
+import projekti.domain.enums.ReactionType;
 
 import java.time.LocalDateTime;
 
 public class TestUtilities {
-    public static Friend createFriend(long status, LocalDateTime time) {
+    public static Friend createFriend(FriendshipState status, LocalDateTime time) {
         Friend first = new Friend();
-        first.setStatus(status);
+        first.setFriendshipState(status);
         first.setTimestamp(time);
         return first;
     }
@@ -47,10 +49,10 @@ public class TestUtilities {
         return image;
     }
 
-    public static Reaction createReaction(String content, Long status, LocalDateTime time) {
+    public static Reaction createReaction(String content, ReactionType status, LocalDateTime time) {
         Reaction reaction = new Reaction();
         reaction.setContent(content);
-        reaction.setStatus(status);
+        reaction.setReactionType(status);
         reaction.setTimestamp(time);
         return reaction;
     }

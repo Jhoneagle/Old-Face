@@ -78,7 +78,7 @@ public class InteractingTest extends FluentTest {
         loginWithCredentials("miina", "miina");
         goTo("http://localhost:" + port + "/old-face/johneagle");
 
-        assertThat(pageSource()).doesNotContain("Create status update...");
+        assertThat(pageSource()).doesNotContain("Create friendshipState update...");
         assertThat(pageSource()).doesNotContain("Post");
         assertThat(pageSource()).contains("Wall");
         assertThat(pageSource()).contains("Album");

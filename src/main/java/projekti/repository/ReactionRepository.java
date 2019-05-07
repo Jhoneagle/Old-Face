@@ -6,13 +6,14 @@ import projekti.domain.entities.Account;
 import projekti.domain.entities.Image;
 import projekti.domain.entities.Reaction;
 import projekti.domain.entities.StatusUpdate;
+import projekti.domain.enums.ReactionType;
 
 import java.util.List;
 
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
-    List<Reaction> findAllByStatusUpdateAndStatus(StatusUpdate statusUpdate, Long status, Pageable pageable);
-    Reaction findByStatusUpdateAndStatusAndWho(StatusUpdate statusUpdate, Long status, Account who);
-    List<Reaction> findAllByImageAndStatus(Image statusUpdate, Long status, Pageable pageable);
-    Reaction findByImageAndStatusAndWho(Image statusUpdate, Long status, Account who);
+    List<Reaction> findAllByStatusUpdateAndReactionType(StatusUpdate statusUpdate, ReactionType reactionType, Pageable pageable);
+    Reaction findByStatusUpdateAndReactionTypeAndWho(StatusUpdate statusUpdate, ReactionType reactionType, Account who);
+    List<Reaction> findAllByImageAndReactionType(Image statusUpdate, ReactionType reactionType, Pageable pageable);
+    Reaction findByImageAndReactionTypeAndWho(Image image, ReactionType reactionType, Account who);
     void deleteAllByImage(Image image);
 }

@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import projekti.domain.enums.PictureState;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Image extends AbstractPersistable<Long> {
-    private Long status;
+    private PictureState pictureState;
     private String name;
     private String description;
     private LocalDateTime timestamp;

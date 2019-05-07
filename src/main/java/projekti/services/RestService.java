@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import projekti.domain.entities.*;
+import projekti.domain.enums.FriendshipState;
+import projekti.domain.enums.ReactionType;
 import projekti.domain.json.FriendJson;
 import projekti.domain.json.ReactionJson;
 import projekti.domain.models.CommentModel;
@@ -56,7 +58,7 @@ public class RestService {
         if (exist == null && exist2 == null) {
             Friend friend = new Friend();
             friend.setTimestamp(LocalDateTime.now());
-            friend.setStatus((long) 0);
+            friend.setFriendshipState(FriendshipState.PENDING);
             friend.setSender(sender);
             friend.setReceiver(receiver);
 
@@ -97,9 +99,9 @@ public class RestService {
         Friend friend = this.friendRepository.findBySenderAndReceiver(sender, receiver);
 
         if (friendJson.isAccept()) {
-            friend.setStatus((long) 1);
+            friend.setFriendshipState(FriendshipState.ACCEPTED);
         } else {
-            friend.setStatus((long) -1);
+            friend.setFriendshipState(FriendshipState.DECLINED);
         }
 
         this.friendRepository.save(friend);
@@ -115,7 +117,7 @@ public class RestService {
     public List<CommentModel> getCommentsOfPost(ReactionJson reactionJson) {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("timestamp").descending());
         StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
-        List<Reaction> all = this.reactionRepository.findAllByStatusUpdateAndStatus(post, (long) 1, pageable);
+        List<Reaction> all = this.reactionRepository.findAllByStatusUpdateAndReactionType(post, ReactionType.COMMENT, pageable);
 
         return createModelList(all);
     }
@@ -131,14 +133,14 @@ public class RestService {
         StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Pageable pageable = PageRequest.of(0, 9, Sort.by("timestamp").descending());
-        List<Reaction> all = this.reactionRepository.findAllByStatusUpdateAndStatus(post, (long) 1, pageable);
+        List<Reaction> all = this.reactionRepository.findAllByStatusUpdateAndReactionType(post, ReactionType.COMMENT, pageable);
         Account user = this.accountRepository.findByUsername(auth.getName());
 
         Reaction result = new Reaction();
         result.setContent(reactionJson.getContent());
         result.setStatusUpdate(post);
         result.setTimestamp(LocalDateTime.now());
-        result.setStatus((long) 1);
+        result.setReactionType(ReactionType.COMMENT);
         result.setWho(user);
 
         this.reactionRepository.save(result);
@@ -182,13 +184,13 @@ public class RestService {
 
         StatusUpdate post = this.postRepository.getOne(reactionJson.getId());
 
-        Reaction exist = this.reactionRepository.findByStatusUpdateAndStatusAndWho(post, (long) 0, user);
+        Reaction exist = this.reactionRepository.findByStatusUpdateAndReactionTypeAndWho(post, ReactionType.LIKE, user);
 
         if (exist == null) {
             Reaction result = new Reaction();
             result.setStatusUpdate(post);
             result.setTimestamp(LocalDateTime.now());
-            result.setStatus((long) 0);
+            result.setReactionType(ReactionType.LIKE);
             result.setWho(user);
 
             this.reactionRepository.save(result);
@@ -218,7 +220,7 @@ public class RestService {
     public List<CommentModel> getCommentsOfImage(ReactionJson reactionJson) {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("timestamp").descending());
         Image post = this.imageRepository.getOne(reactionJson.getId());
-        List<Reaction> all = this.reactionRepository.findAllByImageAndStatus(post, (long) 1, pageable);
+        List<Reaction> all = this.reactionRepository.findAllByImageAndReactionType(post, ReactionType.COMMENT, pageable);
 
         return createModelList(all);
     }
@@ -234,14 +236,14 @@ public class RestService {
         Image post = this.imageRepository.getOne(reactionJson.getId());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Pageable pageable = PageRequest.of(0, 9, Sort.by("timestamp").descending());
-        List<Reaction> all = this.reactionRepository.findAllByImageAndStatus(post, (long) 1, pageable);
+        List<Reaction> all = this.reactionRepository.findAllByImageAndReactionType(post, ReactionType.COMMENT, pageable);
         Account user = this.accountRepository.findByUsername(auth.getName());
 
         Reaction result = new Reaction();
         result.setContent(reactionJson.getContent());
         result.setImage(post);
         result.setTimestamp(LocalDateTime.now());
-        result.setStatus((long) 1);
+        result.setReactionType(ReactionType.COMMENT);
         result.setWho(user);
 
         this.reactionRepository.save(result);
@@ -261,13 +263,13 @@ public class RestService {
 
         Image post = this.imageRepository.getOne(reactionJson.getId());
 
-        Reaction exist = this.reactionRepository.findByImageAndStatusAndWho(post, (long) 0, user);
+        Reaction exist = this.reactionRepository.findByImageAndReactionTypeAndWho(post, ReactionType.LIKE, user);
 
         if (exist == null) {
             Reaction result = new Reaction();
             result.setImage(post);
             result.setTimestamp(LocalDateTime.now());
-            result.setStatus((long) 0);
+            result.setReactionType(ReactionType.LIKE);
             result.setWho(user);
 
             this.reactionRepository.save(result);

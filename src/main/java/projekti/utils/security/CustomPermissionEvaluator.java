@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import projekti.domain.entities.Account;
 import projekti.domain.entities.Friend;
+import projekti.domain.enums.FriendshipState;
 import projekti.repository.AccountRepository;
 
 import java.io.Serializable;
@@ -81,13 +82,13 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
         for (Friend friend : user.getReceiverFriends()) {
-            if (friend.getStatus() > 0 && friend.getSender().getNickname().equals(value)) {
+            if (friend.getFriendshipState() == FriendshipState.ACCEPTED && friend.getSender().getNickname().equals(value)) {
                 return true;
             }
         }
 
         for (Friend friend : user.getSentFriends()) {
-            if (friend.getStatus() > 0 && friend.getReceiver().getNickname().equals(value)) {
+            if (friend.getFriendshipState() == FriendshipState.ACCEPTED && friend.getReceiver().getNickname().equals(value)) {
                 return true;
             }
         }

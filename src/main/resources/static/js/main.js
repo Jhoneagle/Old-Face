@@ -81,6 +81,7 @@ var http4 = new XMLHttpRequest();
 function like(id, index) {
   document.getElementById('addLike' + index).style.display = 'none';
   document.getElementById('likes' + index).textContent = parseInt(document.getElementById('likes' + index).innerHTML) + 1;
+  document.getElementById('removeLike' + index).style.display = 'inline';
   
   var url = base + "/post/like";
   var data = {
@@ -97,8 +98,6 @@ http4.onreadystatechange = function() {
   if (this.readyState !== 4) {
     return
   }
-  
-  document.getElementById('removeLike' + index).style.display = 'inline';
 };
 
 var http5 = new XMLHttpRequest();
@@ -106,6 +105,7 @@ var http5 = new XMLHttpRequest();
 function unlike(id, index) {
   document.getElementById('removeLike' + index).style.display = 'none';
   document.getElementById('likes' + index).textContent = parseInt(document.getElementById('likes' + index).innerHTML) - 1;
+  document.getElementById('addLike' + index).style.display = 'inline';
   
   var url = base + "/post/like";
   var data = {
@@ -122,8 +122,6 @@ http5.onreadystatechange = function() {
   if (this.readyState !== 4) {
     return
   }
-  
-  document.getElementById('addLike' + index).style.display = 'inline';
 };
 
 var http6 = new XMLHttpRequest();
@@ -181,6 +179,7 @@ var http7 = new XMLHttpRequest();
 function likeImage(id) {
   document.getElementById('addLike').style.display = 'none';
   document.getElementById('likes').textContent = parseInt(document.getElementById('likes').innerHTML) + 1;
+  document.getElementById('removeLike').style.display = 'inline';
   
   var url = base + "/image/like";
   var data = {
@@ -197,8 +196,6 @@ http7.onreadystatechange = function() {
   if (this.readyState !== 4) {
     return
   }
-  
-  document.getElementById('removeLike' + index).style.display = 'inline';
 };
 
 var http8 = new XMLHttpRequest();
@@ -206,6 +203,7 @@ var http8 = new XMLHttpRequest();
 function unlikeImage(id) {
   document.getElementById('removeLike').style.display = 'none';
   document.getElementById('likes').textContent = parseInt(document.getElementById('likes').innerHTML) - 1;
+  document.getElementById('addLike').style.display = 'inline';
   
   var url = base + "/image/like";
   var data = {
@@ -222,8 +220,6 @@ http8.onreadystatechange = function() {
   if (this.readyState !== 4) {
     return
   }
-  
-  document.getElementById('addLike' + index).style.display = 'inline';
 };
 
 var http9 = new XMLHttpRequest();

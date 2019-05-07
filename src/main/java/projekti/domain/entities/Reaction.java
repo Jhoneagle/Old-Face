@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import projekti.domain.enums.ReactionType;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Reaction extends AbstractPersistable<Long> {
     private String content;
-    private Long status;
+    private ReactionType reactionType;
     private LocalDateTime timestamp;
 
     @ManyToOne

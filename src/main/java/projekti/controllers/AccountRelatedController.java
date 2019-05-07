@@ -32,7 +32,7 @@ public class AccountRelatedController {
     private MainService mainService;
 
     /**
-     * Main page of the users which same time works as their personal wall where they and their friends can post status updates.
+     * Main page of the users which same time works as their personal wall where they and their friends can post friendshipState updates.
      * Also user can go the same users album or friend list.
      * Also in this page no matter whose it is you can see all friend requests you have gotten.
      *
@@ -79,7 +79,7 @@ public class AccountRelatedController {
     }
 
     /**
-     * Validates the status post form and returns the appropriate error messages or just saves the post and returns to previous page.
+     * Validates the friendshipState post form and returns the appropriate error messages or just saves the post and returns to previous page.
      * This router is also preAuthorized by security to make sure user has authorization to do this.
      *
      * @see StatusPostModel

@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.domain.entities.Reaction;
+import projekti.domain.enums.ReactionType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,23 +34,23 @@ public class ReactionRepositoryTest {
     @Transactional
     public void addSimpleReaction() {
         LocalDateTime time = LocalDateTime.now();
-        Reaction reaction = TestUtilities.createReaction("amazing", 1L, time);
+        Reaction reaction = TestUtilities.createReaction("amazing", ReactionType.COMMENT, time);
         this.reactionRepository.save(reaction);
 
         reaction = this.reactionRepository.findAll().get(0);
         assertNotNull(reaction);
         assertEquals("amazing", reaction.getContent());
-        assertEquals(1, (long) reaction.getStatus());
+        assertEquals(ReactionType.COMMENT, reaction.getReactionType());
     }
 
     @Test
     @Transactional
     public void addMultipleSimpleStatusUpdate() {
         LocalDateTime time = LocalDateTime.now();
-        Reaction reaction = TestUtilities.createReaction("amazing", 1L, time);
+        Reaction reaction = TestUtilities.createReaction("amazing", ReactionType.COMMENT, time);
         this.reactionRepository.save(reaction);
 
-        reaction = TestUtilities.createReaction("amazing", 1L, time);
+        reaction = TestUtilities.createReaction("amazing", ReactionType.COMMENT, time);
         this.reactionRepository.save(reaction);
 
         List<Reaction> all = this.reactionRepository.findAll();

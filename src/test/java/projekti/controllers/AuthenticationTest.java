@@ -67,8 +67,7 @@ public class AuthenticationTest extends FluentTest {
         goTo("http://localhost:" + port + "/login");
         assertThat(pageSource()).contains("Login");
 
-        goTo("http://localhost:" + port + "/register");
-        assertThat(pageSource()).contains("Register");
+        goToPage("/register", "Registration page");
 
         goTo("http://localhost:" + port + "/old-face/test");
         assertThat(pageSource()).contains("Login");
@@ -101,8 +100,7 @@ public class AuthenticationTest extends FluentTest {
 
     @Test
     public void canLoginAndLogout() {
-        goTo("http://localhost:" + port + "/login");
-        assertTrue(pageSource().contains("Login"));
+        goToPage("/login", "Login");
 
         find("#username").fill().with("admin");
         find("#password").fill().with("admin");
@@ -110,20 +108,17 @@ public class AuthenticationTest extends FluentTest {
 
         assertTrue(pageSource().contains("Home"));
 
-        goTo("http://localhost:" + port + "/logout");
-        assertTrue(pageSource().contains("Login"));
+        goToPage("/logout", "Login");
 
         goTo("http://localhost:" + port + "/");
         assertThat(pageSource()).contains("Main Page");
 
-        goTo("http://localhost:" + port + "/old-face/test");
-        assertTrue(pageSource().contains("Login"));
+        goToPage("/old-face/test", "Login");
     }
 
     @Test
     public void registerWithTakenUsername() {
-        goTo("http://localhost:" + port + "/register");
-        assertTrue(pageSource().contains("Register"));
+        goToPage("/register", "Registration page");
 
         find("#username").fill().with("admin");
         find("#password").fill().with("test123Moi");
@@ -134,13 +129,12 @@ public class AuthenticationTest extends FluentTest {
         find("#register-submit").submit();
 
         assertTrue(pageSource().contains("Register"));
-        assertTrue(pageSource().contains("Username must be unique!"));
+        assertTrue(pageSource().contains("Username has been already taken!"));
     }
 
     @Test
     public void registerWithInvalidPassword() {
-        goTo("http://localhost:" + port + "/register");
-        assertTrue(pageSource().contains("Register"));
+        goToPage("/register", "Registration page");
 
         find("#username").fill().with("user");
         find("#password").fill().with("aa");
@@ -151,13 +145,12 @@ public class AuthenticationTest extends FluentTest {
         find("#register-submit").submit();
 
         assertTrue(pageSource().contains("Register"));
-        assertTrue(pageSource().contains("Invalid password!"));
+        assertTrue(pageSource().contains("Passwords length must be between 8-20 characters!"));
     }
 
     @Test
     public void registerWithFailedPasswordConfirm() {
-        goTo("http://localhost:" + port + "/register");
-        assertTrue(pageSource().contains("Register"));
+        goToPage("/register", "Registration page");
 
         find("#username").fill().with("user");
         find("#password").fill().with("test123Moi");
@@ -173,8 +166,7 @@ public class AuthenticationTest extends FluentTest {
 
     @Test
     public void registerWithTakenNickname() {
-        goTo("http://localhost:" + port + "/register");
-        assertTrue(pageSource().contains("Register"));
+        goToPage("/register", "Registration page");
 
         find("#username").fill().with("user");
         find("#password").fill().with("test123Moi");
@@ -185,13 +177,12 @@ public class AuthenticationTest extends FluentTest {
         find("#register-submit").submit();
 
         assertTrue(pageSource().contains("Register"));
-        assertTrue(pageSource().contains("Nickname must be unique!"));
+        assertTrue(pageSource().contains("Nickname has been already taken!"));
     }
 
     @Test
     public void registerSuccess() {
-        goTo("http://localhost:" + port + "/register");
-        assertTrue(pageSource().contains("Register"));
+        goToPage("/register", "Registration page");
 
         find("#username").fill().with("user");
         find("#password").fill().with("test123Moi");
@@ -206,15 +197,14 @@ public class AuthenticationTest extends FluentTest {
 
     @Test
     public void registerSuccessAndLoginSuccessfully() {
-        goTo("http://localhost:" + port + "/register");
-        assertTrue(pageSource().contains("Register"));
+        goToPage("/register", "Registration page");
 
         find("#username").fill().with("user");
         find("#password").fill().with("test123Moi");
         find("#passwordAgain").fill().with("test123Moi");
         find("#firstName").fill().with("bill");
         find("#lastName").fill().with("man");
-        find("#nickname").fill().with("OP");
+        find("#nickname").fill().with("OPMAN");
         find("#register-submit").submit();
 
         assertTrue(pageSource().contains("Login"));
@@ -228,8 +218,7 @@ public class AuthenticationTest extends FluentTest {
 
     @Test
     public void registerWithMultipleErrors() {
-        goTo("http://localhost:" + port + "/register");
-        assertTrue(pageSource().contains("Register"));
+        goToPage("/register", "Registration page");
 
         find("#username").fill().with("admin");
         find("#password").fill().with("aa");
@@ -238,17 +227,16 @@ public class AuthenticationTest extends FluentTest {
         find("#register-submit").submit();
 
         assertTrue(pageSource().contains("Register"));
-        assertTrue(pageSource().contains("Username must be unique!"));
-        assertTrue(pageSource().contains("Invalid password!"));
+        assertTrue(pageSource().contains("Username has been already taken!"));
+        assertTrue(pageSource().contains("Passwords length must be between 8-20 characters!"));
         assertTrue(pageSource().contains("The password fields must match!"));
         assertTrue(pageSource().contains("must not be empty"));
-        assertTrue(pageSource().contains("Nickname must be unique!"));
+        assertTrue(pageSource().contains("Nickname has been already taken!"));
     }
 
     @Test
     public void registerSuccessAfterFixingErrors() {
-        goTo("http://localhost:" + port + "/register");
-        assertTrue(pageSource().contains("Register"));
+        goToPage("/register", "Registration page");
 
         find("#username").fill().with("admin");
         find("#password").fill().with("test123Moi");
@@ -259,7 +247,7 @@ public class AuthenticationTest extends FluentTest {
         find("#register-submit").submit();
 
         assertTrue(pageSource().contains("Register"));
-        assertTrue(pageSource().contains("Username must be unique!"));
+        assertTrue(pageSource().contains("Username has been already taken!"));
         assertTrue(pageSource().contains("The password fields must match!"));
 
         find("#username").fill().with("user");
@@ -268,5 +256,10 @@ public class AuthenticationTest extends FluentTest {
         find("#register-submit").submit();
 
         assertTrue(pageSource().contains("Login"));
+    }
+
+    private void goToPage(String s, String s2) {
+        goTo("http://localhost:" + port + s);
+        assertTrue(pageSource().contains(s2));
     }
 }

@@ -35,7 +35,7 @@ public class Account extends AbstractPersistable<Long> {
     private String email;
     private LocalDate born;
 
-    // (account - status update - account) connection.
+    // (account - friendshipState update - account) connection.
     @OneToMany(mappedBy = "creator")
     private List<StatusUpdate> posts = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class Account extends AbstractPersistable<Long> {
     private List<String> authorities = new ArrayList<>();
 
     /**
-     * Custom simplified tostring to prevent infinite loop because of the friendship and status update double users.
+     * Custom simplified tostring to prevent infinite loop because of the friendship and friendshipState update double users.
       */
     @Override
     public String toString() {

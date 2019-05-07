@@ -13,6 +13,9 @@ import projekti.domain.entities.Account;
 import projekti.domain.entities.Friend;
 import projekti.domain.entities.Image;
 import projekti.domain.entities.StatusUpdate;
+import projekti.domain.enums.FriendshipState;
+import projekti.domain.enums.PictureState;
+import projekti.domain.enums.ReactionType;
 import projekti.domain.models.FriendModel;
 import projekti.domain.models.ImageModel;
 import projekti.domain.models.SearchResult;
@@ -83,7 +86,7 @@ public class MainService {
      * @return map of string - image model pair.
      */
     public Map<String, ImageModel> getAccountsProfilePictures(List<Account> accounts) {
-        List<Image> raw = this.imageRepository.findAllByStatusAndOwnerIn(1L, accounts);
+        List<Image> raw = this.imageRepository.findAllByPictureStateAndOwnerIn(PictureState.PROFILE_PICTURE, accounts);
         return raw.stream().collect(Collectors.toMap(image -> image.getOwner().getNickname(), this::formImageModel, (a, b) -> b));
     }
 
@@ -135,9 +138,9 @@ public class MainService {
             current.setTimestamp(s.getTimestamp());
             current.setId(s.getId());
 
-            long isIt = s.getReactions().stream().filter(r -> r.getStatus() == 0 && r.getWho().getUsername().equals(auth.getName())).count();
+            long isIt = s.getReactions().stream().filter(r -> r.getReactionType() == ReactionType.LIKE && r.getWho().getUsername().equals(auth.getName())).count();
             current.setLikedAlready(isIt == 1);
-            long count = s.getReactions().stream().filter(r -> r.getStatus() == 0).count();
+            long count = s.getReactions().stream().filter(r -> r.getReactionType() == ReactionType.LIKE).count();
             current.setLikes(count);
 
             result.add(current);
@@ -218,7 +221,7 @@ public class MainService {
             for (Friend friend : found.getReceiverFriends()) {
                 if (friend.getSender().getUsername().equals(user.getUsername())) {
                     model.setNotAsked(false);
-                    model.setRequest(friend.getStatus() == 0);
+                    model.setRequest(friend.getFriendshipState() == FriendshipState.PENDING);
                     model.setBending(false);
                     break;
                 }
@@ -227,7 +230,7 @@ public class MainService {
             for (Friend friend : found.getSentFriends()) {
                 if (friend.getReceiver().getUsername().equals(user.getUsername())) {
                     model.setNotAsked(false);
-                    model.setRequest(friend.getStatus() == 0);
+                    model.setRequest(friend.getFriendshipState() == FriendshipState.PENDING);
                     model.setBending(true);
                     break;
                 }
@@ -247,7 +250,7 @@ public class MainService {
     public List<FriendModel> getFriendRequests() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Account user = findByUsername(auth.getName());
-        return user.getReceiverFriends().stream().filter(a -> a.getStatus() == 0).map(a -> getFriendModel(a, a.getSender())).collect(Collectors.toList());
+        return user.getReceiverFriends().stream().filter(a -> a.getFriendshipState() == FriendshipState.PENDING).map(a -> getFriendModel(a, a.getSender())).collect(Collectors.toList());
     }
 
     /**
@@ -275,10 +278,10 @@ public class MainService {
      * @return list of accounts who are friends with the account given as parameter.
      */
     public List<FriendModel> getFriends(Account person) {
-        List<FriendModel> friends = person.getReceiverFriends().stream().filter(a -> a.getStatus() > 0)
+        List<FriendModel> friends = person.getReceiverFriends().stream().filter(a -> a.getFriendshipState() == FriendshipState.ACCEPTED)
                 .map(a -> getFriendModel(a, a.getSender())).collect(Collectors.toList());
 
-        person.getSentFriends().stream().filter(a -> a.getStatus() > 0)
+        person.getSentFriends().stream().filter(a -> a.getFriendshipState() == FriendshipState.ACCEPTED)
                 .map(a -> getFriendModel(a, a.getReceiver())).forEach(friends::add);
 
         return friends;
@@ -303,7 +306,7 @@ public class MainService {
             throw new RuntimeException(e.getMessage());
         }
 
-        image.setStatus((long) 0);
+        image.setPictureState(PictureState.PICTURE);
         image.setTimestamp(LocalDateTime.now());
         image.setDescription(description);
 
@@ -320,15 +323,15 @@ public class MainService {
      */
     public void setAsProfilePicture(Long imageId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Image image = this.imageRepository.findByOwnerAndStatus(findByUsername(auth.getName()), (long) 1);
+        Image image = this.imageRepository.findByOwnerAndPictureState(findByUsername(auth.getName()), PictureState.PROFILE_PICTURE);
 
         if (image != null) {
-            image.setStatus((long) 0);
+            image.setPictureState(PictureState.PICTURE);
             this.imageRepository.save(image);
         }
 
         Image one = this.imageRepository.getOne(imageId);
-        one.setStatus((long) 1);
+        one.setPictureState(PictureState.PROFILE_PICTURE);
         this.imageRepository.save(one);
     }
 
@@ -363,11 +366,11 @@ public class MainService {
         model.setDescription(one.getDescription());
         model.setTimestamp(one.getTimestamp());
         model.setFullName(one.getOwner().getFullName());
-        model.setStatus(one.getStatus());
+        model.setPictureState(one.getPictureState());
 
-        long isIt = one.getReactions().stream().filter(r -> r.getStatus() == 0 && r.getWho().getUsername().equals(auth.getName())).count();
+        long isIt = one.getReactions().stream().filter(r -> r.getReactionType() == ReactionType.LIKE && r.getWho().getUsername().equals(auth.getName())).count();
         model.setLikedAlready(isIt == 1);
-        long count = one.getReactions().stream().filter(r -> r.getStatus() == 0).count();
+        long count = one.getReactions().stream().filter(r -> r.getReactionType() == ReactionType.LIKE).count();
         model.setLikes(count);
         return model;
     }
@@ -380,7 +383,7 @@ public class MainService {
      * @return profile picture of user.
      */
     public ImageModel getWallsProfilePicture(String nickname) {
-        Image image = this.imageRepository.findByOwnerAndStatus(findByNickname(nickname), (long) 1);
+        Image image = this.imageRepository.findByOwnerAndPictureState(findByNickname(nickname), PictureState.PROFILE_PICTURE);
         return formImageModel(image);
     }
 

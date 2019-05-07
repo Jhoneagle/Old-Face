@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import projekti.utils.validators.FieldMatch;
 import projekti.utils.validators.Nickname;
+import projekti.utils.validators.Password;
 import projekti.utils.validators.Username;
 
 import javax.validation.constraints.NotEmpty;
@@ -16,6 +17,7 @@ import javax.validation.constraints.Pattern;
  * @see FieldMatch
  * @see Username
  * @see Nickname
+ * @see Password
  */
 @Data
 @AllArgsConstructor
@@ -28,10 +30,9 @@ public class AccountModel {
     @Username
     private String username;
 
-    // Demands at least one lower case, one upper case and one number character in the password.
-    // Also demands password to be between 8 and 20 letters.
+    // Custom password check.
     @NotEmpty
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,20}$", message = "Invalid password!")
+    @Password
     private String password;
 
     @NotEmpty

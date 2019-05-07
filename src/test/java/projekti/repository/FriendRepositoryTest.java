@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import projekti.TestUtilities;
 import projekti.domain.entities.Friend;
+import projekti.domain.enums.FriendshipState;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,23 +37,23 @@ public class FriendRepositoryTest {
     @Transactional
     public void addSimpleUnrelatedFriend() {
         LocalDateTime time = LocalDateTime.now();
-        Friend first = TestUtilities.createFriend(12, time);
+        Friend first = TestUtilities.createFriend(FriendshipState.ACCEPTED, time);
 
         this.friendRepository.save(first);
         first = this.friendRepository.findAll().get(0);
 
         assertNotNull(first);
-        assertEquals(12, (long) first.getStatus());
-        assertTrue(first.getTimestamp().compareTo(time) == 0);
+        assertEquals(FriendshipState.ACCEPTED, first.getFriendshipState());
+        assertEquals(0, first.getTimestamp().compareTo(time));
     }
 
     @Test
     @Transactional
     public void addMultipleSimpleUnrelatedFriend() {
         LocalDateTime time = LocalDateTime.now();
-        Friend first = TestUtilities.createFriend(100, time);
-        Friend second = TestUtilities.createFriend(0, time);
-        Friend third = TestUtilities.createFriend(666, time);
+        Friend first = TestUtilities.createFriend(FriendshipState.ACCEPTED, time);
+        Friend second = TestUtilities.createFriend(FriendshipState.NOT_REQUESTED, time);
+        Friend third = TestUtilities.createFriend(FriendshipState.ACCEPTED, time);
 
         this.friendRepository.save(first);
         this.friendRepository.save(second);
@@ -60,8 +61,8 @@ public class FriendRepositoryTest {
         List<Friend> friends = this.friendRepository.findAll();
 
         assertEquals(3, friends.size());
-        assertTrue(friends.get(1).getTimestamp().compareTo(second.getTimestamp()) == 0);
-        assertEquals(first.getStatus(), friends.get(0).getStatus());
-        assertEquals(third.getStatus(), friends.get(2).getStatus());
+        assertEquals(0, friends.get(1).getTimestamp().compareTo(second.getTimestamp()));
+        assertEquals(first.getFriendshipState(), friends.get(0).getFriendshipState());
+        assertEquals(third.getFriendshipState(), friends.get(2).getFriendshipState());
     }
 }

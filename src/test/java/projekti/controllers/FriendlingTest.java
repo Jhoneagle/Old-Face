@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import projekti.TestUtilities;
 import projekti.domain.entities.Account;
 import projekti.domain.entities.Friend;
+import projekti.domain.enums.FriendshipState;
 import projekti.repository.AccountRepository;
 import projekti.repository.FriendRepository;
 
@@ -130,7 +131,7 @@ public class FriendlingTest extends FluentTest {
     private void createFriendship(Account sender, Account receiver) {
         Friend friend = new Friend();
         friend.setTimestamp(LocalDateTime.now());
-        friend.setStatus((long) 1);
+        friend.setFriendshipState(FriendshipState.ACCEPTED);
         friend.setSender(sender);
         friend.setReceiver(receiver);
 

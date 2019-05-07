@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Customized version of service that controls user details while logging in, checking authentication status etc.
+ * Customized version of service that controls user details while logging in, checking authentication friendshipState etc.
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

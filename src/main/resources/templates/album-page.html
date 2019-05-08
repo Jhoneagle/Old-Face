@@ -112,9 +112,11 @@
                                         <form th:action="@{/old-face/{nickname}/album/{imageId}/del(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
                                             <input type="submit" value="Delete"/>
                                         </form>
-                                        <form th:action="@{/old-face/{nickname}/album/{imageId}/set(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
-                                            <input type="submit" value="Set as profile picture"/>
-                                        </form>
+                                        <div th:if="${current.pictureState} != ${profilePictureState}">
+                                            <form th:action="@{/old-face/{nickname}/album/{imageId}/set(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
+                                                <input type="submit" value="Set as profile picture"/>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

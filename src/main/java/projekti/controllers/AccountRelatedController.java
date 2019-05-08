@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.domain.entities.Account;
+import projekti.domain.enums.PictureState;
 import projekti.domain.models.FriendModel;
 import projekti.domain.models.ImageModel;
 import projekti.domain.models.SearchResult;
@@ -187,6 +188,7 @@ public class AccountRelatedController {
             }
         }
 
+        model.addAttribute("profilePictureState", PictureState.PROFILE_PICTURE);
         model.addAttribute("album", this.mainService.getPicturesInAlbum(nickname));
         model.addAttribute("profilePicture", this.mainService.getWallsProfilePicture(nickname));
         model.addAttribute("whoseWall", nickname);

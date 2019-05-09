@@ -125,43 +125,48 @@
                         </div>
                     </div>
                     <div class="col-sm-4 well">
-                        <div class="row" th:each="person, iStat : ${requests}">
-                            <div class="col-sm-4">
-                                <div class="well">
-                                    <div th:if="${pictures.get(person.nickname)}">
-                                        <img th:src="@{/old-face/api/files/{id}(id=${pictures.get(person.nickname).id})}" class="img-circle" height="65" width="65" alt="Avatar">
-                                    </div>
-                                    <div th:unless="${pictures.get(person.nickname)}">
-                                        <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="well">
-                                    <div class="row">
-                                        <a th:href="'/old-face/' + ${person.nickname}">
-                                            <span th:text="${person.name}"> creator </span>
-                                        </a>
-                                    </div>
-                                    <div class="row">
-                                        <div th:id="${iStat.index} + 'button'">
-                                            <button type="button" class="btn btn-success"
-                                                    th:attr="onclick=|handleRequest('${person.nickname}', true, '${iStat.index}')|">Accept</button>
-                                            <button type="button" class="btn btn-danger"
-                                                    th:attr="onclick=|handleRequest('${person.nickname}', false, '${iStat.index}')|">Decline</button>
+			<div th:if="${requests.empty}">
+			    <p>No new friend requests.</p>
+			</div>
+			<div th:unless="${requests.empty}">
+                            <div class="row" th:each="person, iStat : ${requests}">
+                                <div class="col-sm-4">
+                                    <div class="well">
+                                        <div th:if="${pictures.get(person.nickname)}">
+                                            <img th:src="@{/old-face/api/files/{id}(id=${pictures.get(person.nickname).id})}" class="img-circle" height="65" width="65" alt="Avatar">
                                         </div>
-                                        <div>
-                                            <div id="alternativeAccept" style="display:none;">
-                                                <p>Accepeted</p>
-                                            </div>
-                                            <div id="alternativeReject" style="display:none;">
-                                                <p>Declined</p>
-                                            </div>
+                                        <div th:unless="${pictures.get(person.nickname)}">
+                                            <img th:src="@{/img/anonymous.png}" class="img-circle" height="65" width="65" alt="Anonymous Avatar">
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-sm-8">
+                                    <div class="well">
+                                        <div class="row">
+                                            <a th:href="'/old-face/' + ${person.nickname}">
+                                                <span th:text="${person.name}"> creator </span>
+                                            </a>
+                                        </div>
+                                        <div class="row">
+                                            <div th:id="${iStat.index} + 'button'">
+                                                <button type="button" class="btn btn-success"
+                                                        th:attr="onclick=|handleRequest('${person.nickname}', true, '${iStat.index}')|">Accept</button>
+                                                <button type="button" class="btn btn-danger"
+                                                        th:attr="onclick=|handleRequest('${person.nickname}', false, '${iStat.index}')|">Decline</button>
+                                            </div>
+                                            <div>
+                                                <div id="alternativeAccept" style="display:none;">
+                                                    <p>Accepeted</p>
+                                                </div>
+                                                <div id="alternativeReject" style="display:none;">
+                                                    <p>Declined</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+			</div>
                     </div>
                 </div>
             </div>

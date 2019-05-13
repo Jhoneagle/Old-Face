@@ -114,6 +114,8 @@ public class RestService {
 
         Friend friend = this.friendRepository.findBySenderAndReceiver(sender, receiver);
 
+        if (friend == null) return;
+
         if (friendJson.isAccept()) {
             friend.setFriendshipState(FriendshipState.ACCEPTED);
         } else {

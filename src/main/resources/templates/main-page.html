@@ -118,7 +118,7 @@
                             <div class="row" th:id="'commentsBlog'+ ${iStat.index}" style="display: none;">
                                 <div sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
                                     <h4>Leave a Comment:</h4>
-                                    <input type="text" id="comment" name="comment" />
+                                    <input type="text" th:id="'comment'+ ${iStat.index}" name="comment" />
                                     <button class="btn btn-success" th:attr="onclick=|createComments('${post.id}', '${iStat.index}')|">Send</button>
                                 </div>
                                 <p>Comments:</p>

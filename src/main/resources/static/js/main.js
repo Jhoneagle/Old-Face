@@ -156,7 +156,7 @@ function createComments(id, index) {
   select = index;
   var data = {
     id: id,
-    content: document.getElementById("comment").value
+    content: document.getElementById("comment" + index).value
   };
   
   http3.open("POST", url);
@@ -180,7 +180,7 @@ http3.onreadystatechange = function() {
   }
   
   document.getElementById("showComments" + select).innerHTML = taskList;
-  document.getElementById("comment").value = ""
+  document.getElementById("comment" + select).value = ""
 };
 
 var http4 = new XMLHttpRequest();

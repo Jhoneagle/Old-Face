@@ -230,29 +230,3 @@ http4.onreadystatechange = function() {
   document.getElementById("showComments").innerHTML = taskList;
   document.getElementById("comment").value = ""
 };
-
-document.getElementById("image-submit").addEventListener("click", function(event) {
-  if (window.File && window.FileReader && window.FileList && window.Blob) {
-    //get the file size and file type from file input field
-    var field = $('#file');
-    
-    var fsize = field[0].files[0].size;
-    var ftype = field[0].files[0].type;
-    
-    switch(ftype) {
-      case 'image/png':
-      case 'image/gif':
-      case 'image/jpeg':
-      case 'image/jpg':
-        break;
-      default:
-        alert('Image file must be in format of either jpg, jpeg, png or gif!');
-        event.preventDefault();
-    }
-    
-    if(fsize > 1048576) {
-      alert("Image must not exceed size of 1MB!");
-      event.preventDefault();
-    }
-  }
-});

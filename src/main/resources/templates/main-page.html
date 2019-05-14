@@ -81,32 +81,34 @@
                                 </div>
                             </div>
                             <div class="row well">
-                                <p>
+                                <p class="col-sm-3">
                                     <span th:id="'likes'+ ${iStat.index}" th:text="${post.likes}" class="badge badge-light p-1" style="margin-right: 5px;">0</span>Like
                                 </p>
-                                <div th:if="${post.likedAlready}" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
-                                    <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
-                                            th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
-                                            style="display: none;">
-                                        Like
-                                    </button>
-                                    <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
-                                            th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
-                                            style="display: inline;">
-                                        Unlike
-                                    </button>
-                                </div>
-                                <div th:unless="${post.likedAlready}" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
-                                    <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
-                                            th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
-                                            style="display: inline;">
-                                        Like
-                                    </button>
-                                    <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
-                                            th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
-                                            style="display: none;">
-                                        Unlike
-                                    </button>
+                                <div class="col-sm-3" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                    <div th:if="${post.likedAlready}">
+                                        <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
+                                                th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
+                                                style="display: none;">
+                                            Like
+                                        </button>
+                                        <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
+                                                th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
+                                                style="display: inline;">
+                                            Unlike
+                                        </button>
+                                    </div>
+                                    <div th:unless="${post.likedAlready}">
+                                        <button type="button" class="btn btn-success" th:id="'addLike'+ ${iStat.index}"
+                                                th:attr="onclick=|like('${post.id}', '${iStat.index}')|"
+                                                style="display: inline;">
+                                            Like
+                                        </button>
+                                        <button type="button" class="btn btn-danger" th:id="'removeLike'+ ${iStat.index}"
+                                                th:attr="onclick=|unlike('${post.id}', '${iStat.index}')|"
+                                                style="display: none;">
+                                            Unlike
+                                        </button>
+                                    </div>
                                 </div>
                                 <button type="button" class="btn btn-success" th:id="'getComments'+ ${iStat.index}"
                                         th:attr="onclick=|getComments('${post.id}', '${iStat.index}')|">
@@ -114,13 +116,13 @@
                                 </button>
                             </div>
                             <div class="row" th:id="'commentsBlog'+ ${iStat.index}" style="display: none;">
-                                <h4 sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
-                                <input type="text" id="comment" name="comment" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))" />
-                                <button class="btn btn-success" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))"
-                                        th:attr="onclick=|createComments('${post.id}', '${iStat.index}')|">Send</button>
-
+                                <div sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                    <h4>Leave a Comment:</h4>
+                                    <input type="text" id="comment" name="comment" />
+                                    <button class="btn btn-success" th:attr="onclick=|createComments('${post.id}', '${iStat.index}')|">Send</button>
+                                </div>
                                 <p>Comments:</p>
-                                <div id="showComments"></div>
+                                <div th:id="'showComments'+ ${iStat.index}"></div>
                             </div>
                         </div>
                     </div>

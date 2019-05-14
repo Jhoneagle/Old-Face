@@ -216,22 +216,34 @@ public class MainService {
             model.setNickname(found.getNickname());
             model.setName(found.getFullName());
 
-            model.setNotAsked(!found.getUsername().equals(user.getUsername()));
+            model.setFriendshipState(FriendshipState.NOT_REQUESTED);
+
+            if (found.getUsername().equals(user.getUsername())) {
+                model.setFriendshipState(FriendshipState.ITSELF);
+            }
 
             for (Friend friend : found.getReceiverFriends()) {
                 if (friend.getSender().getUsername().equals(user.getUsername())) {
-                    model.setNotAsked(friend.getFriendshipState() == FriendshipState.DECLINED);
-                    model.setRequest(friend.getFriendshipState() == FriendshipState.PENDING);
-                    model.setBending(false);
+                    if (friend.getFriendshipState() == FriendshipState.PENDING) {
+                        model.setFriendshipState(FriendshipState.REQUESTED);
+                    } else if (friend.getFriendshipState() == FriendshipState.DECLINED) {
+                        model.setFriendshipState(FriendshipState.NOT_REQUESTED);
+                    } else {
+                        model.setFriendshipState(friend.getFriendshipState());
+                    }
+
                     break;
                 }
             }
 
             for (Friend friend : found.getSentFriends()) {
                 if (friend.getReceiver().getUsername().equals(user.getUsername())) {
-                    model.setNotAsked(friend.getFriendshipState() == FriendshipState.DECLINED);
-                    model.setRequest(friend.getFriendshipState() == FriendshipState.PENDING);
-                    model.setBending(true);
+                    if (friend.getFriendshipState() == FriendshipState.DECLINED) {
+                        model.setFriendshipState(FriendshipState.NOT_REQUESTED);
+                    } else {
+                        model.setFriendshipState(friend.getFriendshipState());
+                    }
+
                     break;
                 }
             }

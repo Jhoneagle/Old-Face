@@ -153,13 +153,13 @@ public class InteractingTest extends FluentTest {
         goTo("http://localhost:" + port + "/old-face/miinagronroos");
 
         assertFalse(pageSource().contains("Leave a Comment:"));
-        assertFalse(el("#showComments").displayed());
+        assertFalse(el("#showComments" + 0).displayed());
 
         assertTrue(pageSource().contains("Show comments"));
         $("button", withText("Show comments")).click();
 
         assertFalse(pageSource().contains("Leave a Comment:"));
-        assertTrue(el("#showComments").displayed());
+        assertTrue(el("#showComments" + 0).displayed());
     }
 
     private void loginWithCredentials(String username, String password) {

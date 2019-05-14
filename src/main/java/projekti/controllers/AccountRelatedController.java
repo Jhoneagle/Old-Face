@@ -188,7 +188,6 @@ public class AccountRelatedController {
             }
         }
 
-        model.addAttribute("profilePictureState", PictureState.PROFILE_PICTURE);
         model.addAttribute("album", this.mainService.getPicturesInAlbum(nickname));
         model.addAttribute("profilePicture", this.mainService.getWallsProfilePicture(nickname));
         model.addAttribute("whoseWall", nickname);

@@ -66,53 +66,57 @@
                                     <p th:text="${current.description}">
                                 </div>
                                 <div class="row">
-                                    <div class="row well">
-                                        <p>
+                                    <div class="row">
+                                        <p class="col-sm-5">
                                             <span id="likes" th:text="${current.likes}" class="badge badge-light p-1" style="margin-right: 5px;">0</span>Like
                                         </p>
-                                        <div th:if="${current.likedAlready}" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
-                                            <button type="button" class="btn btn-success" id="addLike"
-                                                    th:attr="onclick=|likeImage('${current.id}')|"
-                                                    style="display: none;">
-                                                Like
-                                            </button>
-                                            <button type="button" class="btn btn-danger" id="removeLike"
-                                                    th:attr="onclick=|unlikeImage('${current.id}')|"
-                                                    style="display: inline;">
-                                                Unlike
-                                            </button>
+                                        <div class="col-sm-2" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                            <div th:if="${current.likedAlready}">
+                                                <button type="button" class="btn btn-success" id="addLike"
+                                                        th:attr="onclick=|likeImage('${current.id}')|"
+                                                        style="display: none;">
+                                                    Like
+                                                </button>
+                                                <button type="button" class="btn btn-danger" id="removeLike"
+                                                        th:attr="onclick=|unlikeImage('${current.id}')|"
+                                                        style="display: inline;">
+                                                    Unlike
+                                                </button>
+                                            </div>
+                                            <div th:unless="${current.likedAlready}">
+                                                <button type="button" class="btn btn-success" id="addLike"
+                                                        th:attr="onclick=|likeImage('${current.id}')|"
+                                                        style="display: inline;">
+                                                    Like
+                                                </button>
+                                                <button type="button" class="btn btn-danger" id="removeLike"
+                                                        th:attr="onclick=|unlikeImage('${current.id}')|"
+                                                        style="display: none;">
+                                                    Unlike
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div th:unless="${current.likedAlready}" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
-                                            <button type="button" class="btn btn-success" id="addLike"
-                                                    th:attr="onclick=|likeImage('${current.id}')|"
-                                                    style="display: inline;">
-                                                Like
-                                            </button>
-                                            <button type="button" class="btn btn-danger" id="removeLike"
-                                                    th:attr="onclick=|unlikeImage('${current.id}')|"
-                                                    style="display: none;">
-                                                Unlike
-                                            </button>
-                                        </div>
-                                        <button type="button" class="btn btn-success" th:id="'getComments'"
-                                                th:attr="onclick=|getCommentsOfImage('${current.id}')|">
-                                            Show comments
-                                        </button>
                                     </div>
+                                    <button type="button" class="btn btn-success" th:id="'getComments'"
+                                            th:attr="onclick=|getCommentsOfImage('${current.id}')|">
+                                        Show comments
+                                    </button>
                                     <div class="row" th:id="'commentsImage'" style="display: none;">
-                                        <h4 sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">Leave a Comment:</h4>
-                                        <input type="text" id="comment" name="comment" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))" />
-                                        <button class="btn btn-success" sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))"
-                                                th:attr="onclick=|createCommentForImage('${current.id}')|">Send</button>
-
-                                        <p>Comments:</p>
-                                        <div id="showComments"></div>
+                                        <div sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
+                                            <h4>Leave a Comment:</h4>
+                                            <input type="text" id="comment" name="comment" />
+                                            <button class="btn btn-success" th:attr="onclick=|createCommentForImage('${current.id}')|">Send</button>
+                                        </div>
+                                        <div>
+                                            <p>Comments:</p>
+                                            <div id="showComments"></div>
+                                        </div>
                                     </div>
                                     <div class="row" sec:authorize="hasPermission('owner', #request.getAttribute('whoseWall'))">
                                         <form th:action="@{/old-face/{nickname}/album/{imageId}/del(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
                                             <input type="submit" value="Delete"/>
                                         </form>
-                                        <div th:if="${current.pictureState} != ${profilePictureState}">
+                                        <div th:if="${current.pictureState} != ${T(projekti.domain.enums.PictureState).PROFILE_PICTURE}">
                                             <form th:action="@{/old-face/{nickname}/album/{imageId}/set(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
                                                 <input type="submit" value="Set as profile picture"/>
                                             </form>
@@ -126,7 +130,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-2 well" th:each="image : ${album}">
+                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-no-padding" th:each="image : ${album}">
                                 <img th:src="@{/old-face/api/files/{id}(id=${image.id})}" alt="image" class="img-thumbnail">
                                 <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${image.id}, nickname=${whoseWall})}">go</a>
                             </div>
@@ -154,7 +158,7 @@
                       event.preventDefault();
                   }
 
-                  if(fsize > 1048576) {
+                  if(fsize > 10485760) {
                     alert("Image must not exceed size of 1MB!");
                     event.preventDefault();
                   }

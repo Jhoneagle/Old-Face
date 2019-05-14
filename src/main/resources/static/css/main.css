@@ -2,8 +2,24 @@ footer {
     background-color: #555;
     color: white;
     padding: 15px;
+    display: flex;
+    position: absolute;
+    height: 46px;
+    width: 100%;
+    align-items: center;
+}
+
+html, body, ul {
+    margin: 0;
+    padding: 0;
 }
 
 body {
     background-color: powderblue;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4em;
 }

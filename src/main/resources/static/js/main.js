@@ -130,14 +130,15 @@ http2.onreadystatechange = function() {
   }
 };
 
-
 var http3 = new XMLHttpRequest();
+var select;
 
 function getComments(id, index) {
   document.getElementById('getComments' + index).style.display = 'none';
   document.getElementById('commentsBlog' + index).style.display = 'inline';
   
   var url = base + "/post/get";
+  select = index;
   var data = {
     id: id,
     content: ''
@@ -152,6 +153,7 @@ function createComments(id, index) {
   document.getElementById('getComments' + index).style.display = 'none';
   
   var url = base + "/post";
+  select = index;
   var data = {
     id: id,
     content: document.getElementById("comment").value
@@ -177,7 +179,7 @@ http3.onreadystatechange = function() {
     taskList += string;
   }
   
-  document.getElementById("showComments").innerHTML = taskList;
+  document.getElementById("showComments" + select).innerHTML = taskList;
   document.getElementById("comment").value = ""
 };
 

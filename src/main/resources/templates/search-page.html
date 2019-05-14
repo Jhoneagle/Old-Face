@@ -24,15 +24,15 @@
                                     <span th:text="${person.name}"> creator </span>
                                 </a>
 
-                                <div th:if="${person.notAsked}">
+                                <div th:if="${person.friendshipState} == ${T(projekti.domain.enums.FriendshipState).NOT_REQUESTED}">
                                     <button th:id="'ask'+ ${person.nickname}" type="button" class="btn btn-success"
                                             th:attr="onclick=|askToBeFriend('${person.nickname}', '${iStat.index}')|">Ask</button>
                                     <button th:id="'cancel'+ ${person.nickname}" type="button" class="btn btn-danger"
                                             th:attr="onclick=|cancel('${person.nickname}', '${iStat.index}')|"
                                             style="display: none">Cancel</button>
                                 </div>
-                                <div th:unless="${person.notAsked}">
-                                    <div th:if="${person.request} and not ${person.bending}" th:id="${iStat.index} + 'button'">
+                                <div th:unless="${person.friendshipState} == ${T(projekti.domain.enums.FriendshipState).NOT_REQUESTED}">
+                                    <div th:if="${person.friendshipState} == ${T(projekti.domain.enums.FriendshipState).REQUESTED}" th:id="${iStat.index} + 'button'">
                                         <button th:id="'cancel'+ ${person.nickname}" type="button" class="btn btn-danger"
                                                 th:attr="onclick=|cancel('${person.nickname}', '${iStat.index}')|">Cancel</button>
                                         <button th:id="'ask'+ ${person.nickname}" type="button" class="btn btn-success"

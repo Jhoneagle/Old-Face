@@ -35,6 +35,7 @@ public class Image extends AbstractPersistable<Long> {
     // Actual image or well more like its digital representation.
     @Lob
     @Type(type = "org.hibernate.type.ImageType")
+    @Basic(fetch = FetchType.LAZY)
     private byte[] content;
 
     @ManyToOne

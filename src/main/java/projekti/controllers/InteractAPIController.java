@@ -16,9 +16,10 @@ import java.util.List;
 
 /**
  * Controller to handle routes that only work as API endpoints for apps data.
+ * And are related to interacting with others.
  */
 @RestController
-public class AccountRelatedAPI {
+public class InteractAPIController {
     @Autowired
     private RestService restService;
 

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * Except those that are done through REST API endpoints. As they have own service class.
  *
  * @see RestService
- * @see projekti.controllers.AccountRelatedController
+ * @see projekti.controllers.ProfileController
  */
 @Service
 public class MainService {

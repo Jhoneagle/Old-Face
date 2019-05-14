@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Service class to contain all the logic what REST API controller needs.
  *
- * @see projekti.controllers.AccountRelatedAPI
+ * @see projekti.controllers.InteractAPIController
  */
 @Service
 public class RestService {

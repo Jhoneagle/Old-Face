@@ -131,12 +131,12 @@ public class InteractingTest extends FluentTest {
         find("#content").fill().with("this is test post");
         find("#post-submit").submit();
 
-        assertFalse(el("#comment").displayed());
+        assertFalse(el("#comment" + 0).displayed());
 
         assertTrue(pageSource().contains("Show comments"));
         $("button", withText("Show comments")).click();
 
-        assertTrue(el("#comment").displayed());
+        assertTrue(el("#comment" + 0).displayed());
     }
 
     @Test

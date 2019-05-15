@@ -23,3 +23,18 @@ p, h1, h2, h3, h4, h5, h6 {
     padding: 0;
     line-height: 1.4em;
 }
+
+.text-center {
+    word-wrap: break-word;
+    margin: 8px;
+    padding: 8px;
+}
+
+.image-edit-button {
+    width: 90%;
+}
+
+.img-thumbnail {
+    max-width: 250px;
+    max-height: 250px;
+}

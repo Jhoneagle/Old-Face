@@ -46,7 +46,7 @@
                                                 <input type="submit"
                                                        name="image-submit"
                                                        id="image-submit"
-                                                       class="form-control btn btn-info"
+                                                       class="form-control btn btn-success"
                                                        value="Post">
                                             </div>
                                         </div>
@@ -56,14 +56,22 @@
                         </div>
                         <div class="row">
                             <div th:if="${previous}" class="col-sm-4 well">
-                                <img th:src="@{/old-face/api/files/{id}(id=${previous.id})}" alt="image" class="img-thumbnail">
-                                <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${previous.id}, nickname=${whoseWall})}">previous</a>
+                                <div class="row">
+                                    <img th:src="@{/old-face/api/files/{id}(id=${previous.id})}" alt="image" class="img-thumbnail">
+                                </div>
+                                <div class="row">
+                                    <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${previous.id}, nickname=${whoseWall})}">previous</a>
+                                </div>
                             </div>
 
                             <div th:if="${current}" class="col-sm-4 well">
                                 <div class="row">
-                                    <img th:src="@{/old-face/api/files/{id}(id=${current.id})}" alt="image" class="img-thumbnail">
-                                    <p th:text="${current.description}">
+                                    <div class="row">
+                                        <img th:src="@{/old-face/api/files/{id}(id=${current.id})}" alt="image" class="img-thumbnail">
+                                    </div>
+                                    <div class="row">
+                                        <p class="text-center" th:text="${current.description}">
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="row">
@@ -97,42 +105,60 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-success" th:id="'getComments'"
-                                            th:attr="onclick=|getCommentsOfImage('${current.id}')|">
-                                        Show comments
-                                    </button>
+                                    <br />
+                                    <div class="form-group">
+                                        <button type="button" class="form-control btn btn-info" th:id="'getComments'"
+                                                th:attr="onclick=|getCommentsOfImage('${current.id}')|">
+                                            Show comments
+                                        </button>
+                                    </div>
                                     <div class="row" th:id="'commentsImage'" style="display: none;">
                                         <div sec:authorize="hasPermission('access', #request.getAttribute('whoseWall'))">
                                             <h4>Leave a Comment:</h4>
-                                            <input type="text" id="comment" name="comment" />
-                                            <button class="btn btn-success" th:attr="onclick=|createCommentForImage('${current.id}')|">Send</button>
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" id="comment" name="comment" />
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="form-control btn btn-success" th:attr="onclick=|createCommentForImage('${current.id}')|">Send</button>
+                                            </div>
                                         </div>
                                         <div>
                                             <p>Comments:</p>
                                             <div id="showComments"></div>
                                         </div>
                                     </div>
-                                    <div class="row" sec:authorize="hasPermission('owner', #request.getAttribute('whoseWall'))">
-                                        <form th:action="@{/old-face/{nickname}/album/{imageId}/del(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
-                                            <input type="submit" value="Delete"/>
-                                        </form>
-                                        <div th:if="${current.pictureState} != ${T(projekti.domain.enums.PictureState).PROFILE_PICTURE}">
+                                    <div sec:authorize="hasPermission('owner', #request.getAttribute('whoseWall'))">
+                                        <div class="row">
+                                            <form th:action="@{/old-face/{nickname}/album/{imageId}/del(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
+                                                <div class="form-group">
+                                                    <input type="submit" class="image-edit-button btn btn-danger" value="Delete"/>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="row" th:if="${current.pictureState} != ${T(projekti.domain.enums.PictureState).PROFILE_PICTURE}">
                                             <form th:action="@{/old-face/{nickname}/album/{imageId}/set(imageId=${current.id}, nickname=${whoseWall})}" th:method="post">
-                                                <input type="submit" value="Set as profile picture"/>
+                                                <div class="form-group">
+                                                    <input type="submit" class="image-edit-button btn btn-primary" value="Set as profile picture"/>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div th:if="${next}" class="col-sm-4 well">
-                                <img th:src="@{/old-face/api/files/{id}(id=${next.id})}" alt="image" class="img-thumbnail">
-                                <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${next.id}, nickname=${whoseWall})}">next</a>
+                                <div class="row">
+                                    <img th:src="@{/old-face/api/files/{id}(id=${next.id})}" alt="image" class="img-thumbnail">
+                                </div>
+                                <div class="row">
+                                    <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${next.id}, nickname=${whoseWall})}">next</a>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-no-padding" th:each="image : ${album}">
-                                <img th:src="@{/old-face/api/files/{id}(id=${image.id})}" alt="image" class="img-thumbnail">
-                                <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${image.id}, nickname=${whoseWall})}">go</a>
+                                <a th:href="@{/old-face/{nickname}/album/{imageId}(imageId=${image.id}, nickname=${whoseWall})}">
+                                    <img th:src="@{/old-face/api/files/{id}(id=${image.id})}" alt="image" class="img-thumbnail">
+                                </a>
                             </div>
                         </div>
                     </div>

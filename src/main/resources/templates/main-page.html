@@ -161,10 +161,10 @@
                                                         th:attr="onclick=|handleRequest('${person.nickname}', false, '${iStat.index}')|">Decline</button>
                                             </div>
                                             <div>
-                                                <div id="alternativeAccept" style="display:none;">
+                                                <div th:id="${iStat.index} + 'alternativeAccept'" style="display:none;">
                                                     <p>Accepeted</p>
                                                 </div>
-                                                <div id="alternativeReject" style="display:none;">
+                                                <div th:id="${iStat.index} + 'alternativeReject'" style="display:none;">
                                                     <p>Declined</p>
                                                 </div>
                                             </div>

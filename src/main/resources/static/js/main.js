@@ -103,9 +103,11 @@ http.onreadystatechange = function() {
 };
 
 var http2 = new XMLHttpRequest();
+var requestIndex;
 
 function handleRequest(nickname, accept, index) {
   document.getElementById(index + 'button').style.display = 'none';
+  requestIndex = index;
   
   var url = base + "/request";
   var data = {
@@ -124,9 +126,9 @@ http2.onreadystatechange = function() {
   }
   
   if (JSON.parse(this.response).accept) {
-    document.getElementById('alternativeAccept').style.display = 'inline';
+    document.getElementById(requestIndex + 'alternativeAccept').style.display = 'inline';
   } else {
-    document.getElementById('alternativeReject').style.display = 'inline';
+    document.getElementById(requestIndex + 'alternativeReject').style.display = 'inline';
   }
 };
 
